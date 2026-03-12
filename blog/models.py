@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import CASCADE, SET_NULL
 
 
-def image_upload_to(instance, filename):  # s3의 images/posts/에 업로드 하는 함수
+def post_image_upload_to(instance, filename):  # s3의 images/posts/에 업로드 하는 함수
     ext = os.path.splitext(filename)[1].lower()
     return f"images/posts/{uuid.uuid4()}{ext}"
 
@@ -24,14 +24,14 @@ class Post(models.Model):
     subtitle = models.CharField(max_length=50)
     description = models.CharField(max_length=300)
     content = models.TextField()
-    preview_image = models.ImageField(upload_to=image_upload_to)
+    preview_image = models.ImageField(upload_to=post_image_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=SET_NULL, null=True)
-    path = models.ImageField(upload_to=image_upload_to)
+    path = models.ImageField(upload_to=post_image_upload_to)
     capacity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
