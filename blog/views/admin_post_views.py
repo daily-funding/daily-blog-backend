@@ -25,7 +25,7 @@ def admin_post_create_view(request):
             )
             return redirect("blog:admin-post-list")
         # 이후 게시물 자세히 보기로 돌아가는 것으로 변경 예정
-    else:
+    else: # else 말고 다른 상황에 대해서 처리 구체화 해야함
         form = PostCreateForm()
 
     return render(
