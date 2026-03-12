@@ -1,8 +1,14 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 from blog.forms import PostCreateForm
 from blog.services.post_create_service import create_post
+
+
+@staff_member_required
+def admin_post_list_view(request):
+    return HttpResponse("관리자 게시물 목록 페이지")
 
 
 @staff_member_required
