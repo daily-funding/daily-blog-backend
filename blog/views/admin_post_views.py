@@ -19,8 +19,11 @@ def admin_post_create_view(request):
         form = PostCreateForm(request.POST, request.FILES)
 
         if form.is_valid():
-            create_post(form=form, user=request.user)
-            return redirect("blog:admin-post-list")  # 작성 후 게시물 목록 조회로 돌아감
+            create_post(
+                validated_data=form.cleaned_data,
+                author=request.user,
+            )
+            return redirect("blog:admin-post-list")
         # 이후 게시물 자세히 보기로 돌아가는 것으로 변경 예정
     else:
         form = PostCreateForm()
