@@ -7,9 +7,10 @@ from django.db.models import CASCADE, SET_NULL
 
 POST_IMAGE_UPLOAD_PATH = "images/posts/"
 
+
 def post_image_upload_to(instance, filename):  # s3의 images/posts/에 업로드 하는 함수
     ext = os.path.splitext(filename)[1].lower()
-    return f"{POST_IMAGE_UPLOAD_PATH}/{uuid.uuid4()}{ext}"
+    return f"{POST_IMAGE_UPLOAD_PATH}{uuid.uuid4()}{ext}"
 
 
 class Category(models.Model):
