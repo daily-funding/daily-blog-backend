@@ -9,6 +9,10 @@ pip install -r requirements.txt
 python manage.py makemigrations --settings=config.settings.local
 python manage.py migrate --settings=config.settings.local
 ```
+## 관리자 계정 만들기
+```bash
+python manage.py createsuperuser --settings=config.settings.local
+```
 
 ## Server 실행
 ```bash
