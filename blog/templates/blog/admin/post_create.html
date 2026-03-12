@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>게시물 작성</title>
+</head>
+
+<body>
+  <h1>관리자 게시물 작성</h1>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">등록</button>
+  </form>
+</body>
+
+</html>
