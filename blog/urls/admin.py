@@ -5,13 +5,13 @@ from blog.views.admin_post_views import (
     admin_post_list_view,
 )
 
-app_name = "admin"
+app_name = "blog"
 
 urlpatterns = [
-    path("posts/", staff_member_required(admin_post_list_view), name="post-list"),
+    path("posts/", staff_member_required(admin_post_list_view), name="admin-post-list"),
     path(
         "posts/create/",
         staff_member_required(admin_post_create_view),
-        name="post-create",
+        name="admin-post-create",
     ),
 ]
