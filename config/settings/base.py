@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "storages", # s3 관련
     "blog",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
