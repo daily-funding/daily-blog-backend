@@ -6,11 +6,13 @@ from blog.forms import PostCreateForm
 from blog.services.post_create_service import create_post
 
 
+# 관리자 게시물 목록 조회
 @staff_member_required
 def admin_post_list_view(request):
     return HttpResponse("관리자 게시물 목록 페이지")
 
 
+# 관리자 게시물 생성
 @staff_member_required
 def admin_post_create_view(request):
     if request.method == "POST":
