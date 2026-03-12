@@ -34,5 +34,5 @@ def test_post_image_upload():
             preview_image=File(img, name=image_path.name),
         )
 
-    assert post.preview_image.name.startswith("images/posts")
+    assert post.preview_image.name.startswith("images/posts/")
     assert default_storage.exists(post.preview_image.name)
