@@ -23,11 +23,11 @@ python manage.py runserver --settings=config.settings.local
 ```
 
 ## 배포 전 요구사항 맞추기
-```zsh
+```bash
 pip freeze > requirements.txt
 ```
 
 ## pytest
-```zsh
+```bash
 pytest -v
 ```
