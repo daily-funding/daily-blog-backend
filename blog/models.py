@@ -30,7 +30,6 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=SET_NULL, null=True)
     path = models.ImageField(upload_to=post_image_upload_to)
