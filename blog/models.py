@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import CASCADE, SET_NULL
 
 
-def image_upload_to(instance, filename):
+def image_upload_to(instance, filename): # s3의 images/posts에 업로드 하는 함수 
     ext = os.path.splitext(filename)[1].lower()
     return f"images/posts{uuid.uuid4()}{ext}"
 

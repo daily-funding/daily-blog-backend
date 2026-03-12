@@ -1,4 +1,4 @@
-# 실제 modesl.py의 upload 함수 이용하여 s3에 업로드 하는 테스트 코드
+# 실제 modesl.py의 model 활용하여 s3에 업로드 하는 테스트 코드
 
 import pytest
 from pathlib import Path
