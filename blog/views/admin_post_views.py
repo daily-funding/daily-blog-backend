@@ -14,6 +14,11 @@ def admin_post_list_view(request):
 
 # 관리자 게시물 생성
 @staff_member_required
+def admin_post_list_view(request):
+    return HttpResponse("관리자 게시물 목록 페이지")
+
+
+@staff_member_required
 def admin_post_create_view(request):
     if request.method == "POST":
         form = PostCreateForm(request.POST, request.FILES)
