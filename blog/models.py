@@ -7,6 +7,7 @@ from django.db.models import CASCADE, SET_NULL
 
 POST_IMAGE_UPLOAD_PATH = "images/posts/"
 
+
 def post_image_upload_to(instance, filename):  # s3의 images/posts/에 업로드 하는 함수
     ext = os.path.splitext(filename)[1].lower()
     return f"{POST_IMAGE_UPLOAD_PATH}/{uuid.uuid4()}{ext}"
@@ -28,6 +29,7 @@ class Post(models.Model):
     preview_image = models.ImageField(upload_to=post_image_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=SET_NULL, null=True)
