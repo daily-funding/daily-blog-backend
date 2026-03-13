@@ -5,7 +5,10 @@ from django.conf import settings
 from blog.models import Post, PostImage
 
 # 이미지 추출을 위한 이미지 패턴 정규식
-IMG_SRC_PATTERN = re.compile(r'<img[^>]+src=["\']([^"\']+)["\']')
+IMG_SRC_PATTERN = re.compile(
+    r'<img[^>]+src\s*=\s*["\']([^"\']+)["\']',
+    re.IGNORECASE,
+)
 
 
 # 이미지 경로 문자열 리스트 반환
