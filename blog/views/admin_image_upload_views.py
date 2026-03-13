@@ -1,11 +1,9 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse, HttpResponseBadRequest
-from django.views.decorators.csrf import csrf_exempt
 
 from blog.models import PostImage
 
 
-@csrf_exempt
 @staff_member_required
 def admin_image_upload_view(request):
     if request.method != "POST":
