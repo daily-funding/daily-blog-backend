@@ -7,15 +7,12 @@ from blog.services.post_create_service import create_post
 
 
 # 관리자 게시물 목록 조회
-<<<<<<< HEAD
 @staff_member_required
 def admin_post_list_view(request):
     return HttpResponse("관리자 게시물 목록 페이지")
 
 
 # 관리자 게시물 생성
-=======
->>>>>>> 4110704 (chore: 주석 추가)
 @staff_member_required
 def admin_post_list_view(request):
     return HttpResponse("관리자 게시물 목록 페이지")
