@@ -1,6 +1,8 @@
 import os
 import logging
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,7 +11,7 @@ load_dotenv()
 def get_env_or_raise(key: str) -> str:
     value = os.getenv(key)
     if not value:
-        raise RuntimeError(f"{key} 환경변수가 설정되지 않았습니다.")
+        raise ImproperlyConfigured(f"{key} 환경변수가 설정되지 않았습니다.")
     return value
 
 
