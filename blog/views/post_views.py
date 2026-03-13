@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from blog.models import Post
 from blog.paginations.PostPagination import PostPagination
 from blog.serializers.post_serializers import PostDetailSerializer, PostListSerializer
+from blog.util.request_parser import get_query_string_filter
+
 
 class PostDetailView(APIView):
 
@@ -17,12 +19,13 @@ class PostDetailView(APIView):
 class PostListView(APIView):
 
     def get(self, request):
-        filters = {
-            key: value
-            for key, value in request.query_params.items()
-            if key in ["category_id"]
-        }
-        posts = Post.objects.filter(**filters).order_by("-created_at")
+        filters = get_query_string_filter(request, "category_id")
+
+        try:
+            posts = Post.objects.filter(**filters).order_by("-created_at")
+        except ValueError as e:
+            return Response({"error": str(e)}, status=400)
+
         pagination = PostPagination()
         paginated_posts = pagination.paginate_queryset(posts, request)
         serializer = PostListSerializer(paginated_posts, many=True)
