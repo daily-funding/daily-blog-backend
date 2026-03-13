@@ -5,6 +5,7 @@ from blog.models import Post
 
 
 class PostCreateForm(forms.ModelForm):
+    # ckeditor에는 본문만 적용
     content = forms.CharField(
         label="본문",
         widget=CKEditorUploadingWidget(config_name="admin_post"),
