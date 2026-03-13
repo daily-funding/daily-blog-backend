@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()  # .env 읽음
+load_dotenv()
 
 
 def get_env_or_raise(key: str) -> str:
@@ -13,21 +13,11 @@ def get_env_or_raise(key: str) -> str:
     return value
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# 세션, CSRF 토큰, password 리셋 등에 사용됨
 SECRET_KEY = get_env_or_raise("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-
-POST_IMAGE_UPLOAD_ROOT = "images/posts/"  # 게시물 이미지 업로드 경로
-
-# Application definition
+POST_IMAGE_UPLOAD_ROOT = "images/posts/"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -36,17 +26,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "storages",  # s3 관련
-    "ckeditor",  # editor
-    "ckeditor_uploader",  # editor
+    "storages",
+    "ckeditor",
+    "ckeditor_uploader",
     "blog",
     "rest_framework",
 ]
 
-# django-ckeditor 기본 업로드 경로
 CKEDITOR_UPLOAD_PATH = POST_IMAGE_UPLOAD_ROOT
 
-# 관리자 게시물 작성용 에디터 설정
 CKEDITOR_CONFIGS = {
     "admin_post": {
         "height": 400,
@@ -58,7 +46,6 @@ CKEDITOR_CONFIGS = {
             ["Image", "Table", "HorizontalRule"],
             ["RemoveFormat", "Source"],
         ],
-        # 관리자 업로드용 URL
         "filebrowserImageUploadUrl": "/admin/blog/images/upload/",
     }
 }
@@ -90,12 +77,7 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = "config.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -103,10 +85,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -125,8 +103,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")
+AWS_STORAGE_BUCKET_NAME = get_env_or_raise("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = get_env_or_raise("AWS_S3_REGION_NAME")
+
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = None
 AWS_S3_FILE_OVERWRITE = False
@@ -144,25 +123,13 @@ STORAGES = {
     },
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "Asia/Seoul"
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
 STATIC_URL = "/static/"
-
 STATICFILES_DIRS = [BASE_DIR / "static"]
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 REST_FRAMEWORK = {
