@@ -1,8 +1,10 @@
+import logging
 import re
 
 from django.conf import settings
-
 from blog.models import Post, PostImage
+
+logger = logging.getLogger(__name__)
 
 # 이미지 추출을 위한 이미지 패턴 정규식
 IMG_SRC_PATTERN = re.compile(
@@ -39,9 +41,19 @@ def create_post(*, validated_data, author):
     image_paths = extract_post_image_paths_from_html(post.content)
 
     if image_paths:
-        PostImage.objects.filter(
+        updated_count = PostImage.objects.filter(
             post__isnull=True,
             path__in=image_paths,
         ).update(post=post)
 
+        if updated_count != len(image_paths):
+            logger.warning(
+                "PostImage mapping failed",
+                extra={
+                    "post_id": post.id,
+                    "extracted_count": len(image_paths),
+                    "updated_count": updated_count,
+                    "image_paths": image_paths,
+                },
+            )
     return post

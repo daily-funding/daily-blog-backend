@@ -1,5 +1,6 @@
-from pathlib import Path
 import os
+import logging
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()  # .env 읽음
@@ -161,4 +162,25 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 6,
     'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "[{levelname}] {asctime} {name}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
 }
