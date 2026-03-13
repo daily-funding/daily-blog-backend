@@ -165,3 +165,6 @@ class TestPostListView:
         assert response.data["next"] is None
         assert response.data["previous"] is None
         assert len(response.data["results"]) == 5
+        assert all(
+            post["category_name"] == category1.name for post in response.data["results"]
+        )
