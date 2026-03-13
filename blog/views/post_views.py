@@ -20,9 +20,8 @@ class PostListView(APIView):
 
     def get(self, request):
         filters = get_query_string_filter(request, "category_id")
-
         try:
-            posts = Post.objects.filter(**filters).order_by("-created_at")
+            posts = Post.objects.select_related('category').filter(**filters).order_by("-created_at")
         except ValueError as e:
             return Response({"error": str(e)}, status=400)
 
