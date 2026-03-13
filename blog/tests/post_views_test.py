@@ -194,6 +194,7 @@ class TestPostListView:
         response = client.get("/posts/")
 
         # then
+        assert response.status_code == 200
         assert response.data["results"][0]["post_id"] == post2.id
         assert response.data["results"][1]["post_id"] == post1.id
         assert response.data["results"][2]["post_id"] == post3.id
