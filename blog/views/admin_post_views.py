@@ -26,7 +26,7 @@ def admin_post_create_view(request):
         form = PostCreateForm(request.POST, request.FILES)
 
         if form.is_valid():
-            create_post(
+            post = create_post(
                 validated_data=form.cleaned_data,
                 author=request.user,
             )
