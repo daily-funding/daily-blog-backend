@@ -138,3 +138,30 @@ class TestPostListView:
 
         # then
         assert response.status_code == 404
+
+    def test_retrieve_posts_by_category(self):
+        # given
+        client = APIClient()
+        user = create_user()
+        category1 = create_category(name="카테고리1")
+        category2 = create_category(name="카테고리2")
+        preview_image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        for _ in range(5):
+            create_post(category=category1, preview_image=preview_image, author=user)
+
+        for _ in range(5):
+            create_post(category=category2, preview_image=preview_image, author=user)
+
+        # when
+        response = client.get("/posts/?page=1&category_id=1")
+
+        # then
+        assert response.status_code == 200
+        assert response.data["count"] == 5
+        assert response.data["next"] is None
+        assert response.data["previous"] is None
+        assert len(response.data["results"]) == 5
