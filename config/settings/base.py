@@ -16,9 +16,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-POST_IMAGE_UPLOAD_ROOT = (
-    "images/posts/"  # 게시물 이미지 업로드 경로 
-)
+POST_IMAGE_UPLOAD_ROOT = "images/posts/"  # 게시물 이미지 업로드 경로
 
 # Application definition
 
@@ -51,8 +49,8 @@ CKEDITOR_CONFIGS = {
             ["Image", "Table", "HorizontalRule"],
             ["RemoveFormat", "Source"],
         ],
-        # 관리자 업로드 URL
-        "filebrowserUploadUrl": "/admin/blog/images/upload/",
+        # 관리자 업로드용 URL
+        "filebrowserImageUploadUrl": "/admin/blog/images/upload/",
     }
 }
 
@@ -116,6 +114,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")
+AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
+AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE = False
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "region_name": AWS_S3_REGION_NAME,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

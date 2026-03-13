@@ -1,9 +1,11 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.csrf import csrf_exempt
 
 from blog.models import PostImage
 
 
+@csrf_exempt
 @staff_member_required
 def admin_image_upload_view(request):
     if request.method != "POST":
@@ -11,28 +13,24 @@ def admin_image_upload_view(request):
 
     uploaded_file = request.FILES.get("upload")
     if not uploaded_file:
-        return HttpResponseBadRequest("업로드된 파일이 없습니다.")
+        return JsonResponse(
+            {
+                "uploaded": 0,
+                "error": {"message": "업로드된 파일이 없습니다."},
+            },
+            status=400,
+        )
 
-    # 업로드 직후 PostImage 생성
     post_image = PostImage.objects.create(
         post=None,
         path=uploaded_file,
         capacity=uploaded_file.size,
     )
 
-    image_url = post_image.path.url
-    ck_func_num = request.GET.get("CKEditorFuncNum", "")
-
-    # CKEditor4 업로드 응답 형식
-    return HttpResponse(
-        f"""
-        <script>
-            window.parent.CKEDITOR.tools.callFunction(
-                {ck_func_num},
-                "{image_url}",
-                ""
-            );
-        </script>
-        """,
-        content_type="text/html",
+    return JsonResponse(
+        {
+            "uploaded": 1,
+            "fileName": uploaded_file.name,
+            "url": post_image.path.url,
+        }
     )
