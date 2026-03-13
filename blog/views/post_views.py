@@ -22,7 +22,7 @@ class PostListView(APIView):
             for key, value in request.query_params.items()
             if key in ["category_id"]
         }
-        posts = Post.objects.filter(**filters)
+        posts = Post.objects.filter(**filters).order_by("-created_at")
         pagination = PageNumberPagination()
         paginated_posts = pagination.paginate_queryset(posts, request)
         serializer = PostListSerializer(paginated_posts, many=True)
