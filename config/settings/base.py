@@ -110,5 +110,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 6
+    'PAGE_SIZE': 6,
+    'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
 }

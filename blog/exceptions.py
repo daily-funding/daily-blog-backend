@@ -1,0 +1,3 @@
+
+class BlogException(Exception):
+    pass
