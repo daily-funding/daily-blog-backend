@@ -4,9 +4,8 @@ import uuid
 from django.conf import settings
 from django.db import models
 from django.db.models import CASCADE, SET_NULL
-from django.conf import settings
 
-POST_IMAGE_UPLOAD_PATH = settings.POST_IMAGE_UPLOAD_ROOT 
+POST_IMAGE_UPLOAD_PATH = settings.POST_IMAGE_UPLOAD_ROOT
 # settings.py에서 관리하도록 수정
 
 
