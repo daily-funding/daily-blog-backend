@@ -5,6 +5,14 @@ from dotenv import load_dotenv
 
 load_dotenv()  # .env 읽음
 
+
+def get_env_or_raise(key: str) -> str:
+    value = os.getenv(key)
+    if not value:
+        raise RuntimeError(f"{key} 환경변수가 설정되지 않았습니다.")
+    return value
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -13,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # 세션, CSRF 토큰, password 리셋 등에 사용됨
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = get_env_or_raise("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -159,9 +167,9 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 6,
-    'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 6,
+    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
 }
 
 LOGGING = {
