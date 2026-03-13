@@ -159,7 +159,7 @@ class TestPostListView:
             create_post(category=category2, preview_image=preview_image, author=user)
 
         # when
-        response = client.get("/posts/?page=1&category_id=1")
+        response = client.get(f"/posts/?page=1&category_id={category1.id}")
 
         # then
         assert response.status_code == 200
