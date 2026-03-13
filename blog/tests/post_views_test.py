@@ -10,6 +10,8 @@ from blog.tests.fixture.category_fixture import create_category
 from blog.tests.fixture.post_fixture import create_post
 from blog.tests.fixture.user_fixture import create_user
 
+from freezegun import freeze_time
+
 
 @pytest.fixture(autouse=True)
 def aws_mock():
@@ -168,3 +170,31 @@ class TestPostListView:
         assert all(
             post["category_name"] == category1.name for post in response.data["results"]
         )
+
+    def test_retrieve_posts_order_by_created_at_desc(self):
+        # given
+        client = APIClient()
+        user = create_user()
+        category = create_category()
+        preview_image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        with freeze_time("2024-01-02 00:00:00"):
+            post1 = create_post(category=category, preview_image=preview_image, author=user)
+
+        with freeze_time("2024-01-03 00:00:00"):
+            post2 = create_post(category=category, preview_image=preview_image, author=user)
+
+        with freeze_time("2024-01-01 00:00:00"):
+            post3 = create_post(category=category, preview_image=preview_image, author=user)
+
+        # when
+        response = client.get("/posts/")
+        print(response.data)
+
+        # then
+        assert response.data["results"][0]["post_id"] == post2.id
+        assert response.data["results"][1]["post_id"] == post1.id
+        assert response.data["results"][2]["post_id"] == post3.id
