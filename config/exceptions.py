@@ -14,10 +14,7 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
     if response is not None:
         return response
-
-    return Response(
-        {"error": "서버 오류가 발생했습니다."}, status=HTTP_500_INTERNAL_SERVER_ERROR
-    )
+    return None
 
 
 def handle_blog_exceptions(exc, context):
