@@ -29,7 +29,7 @@ ALLOWED_TAGS = {
 }
 
 ALLOWED_ATTRIBUTES = {
-    "a": {"href", "title", "target", "rel"},
+    "a": {"href", "title", "target"},
     "img": {"src", "alt", "width", "height"},
 }
 
@@ -44,4 +44,3 @@ def sanitize_post_content(content: str) -> str:
         attributes=ALLOWED_ATTRIBUTES,
         url_schemes={"http", "https"},
     )
-  
