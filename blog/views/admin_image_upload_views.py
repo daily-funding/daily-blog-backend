@@ -1,4 +1,5 @@
 import logging
+import os
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import ValidationError
@@ -63,7 +64,7 @@ def admin_image_upload_view(request):
     return JsonResponse(
         {
             "uploaded": 1,
-            "fileName": uploaded_file.name,
+            "fileName": os.path.basename(post_image.path.name),
             "url": post_image.path.url,
         }
     )
