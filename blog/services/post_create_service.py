@@ -1,8 +1,44 @@
-from blog.models import Post
+import re
+
+from django.conf import settings
+
+from blog.models import Post, PostImage
+
+# 이미지 추출을 위한 이미지 패턴 정규식
+IMG_SRC_PATTERN = re.compile(r'<img[^>]+src=["\']([^"\']+)["\']')
+
+
+# 이미지 경로 문자열 리스트 반환
+def extract_post_image_paths_from_html(content: str) -> list[str]:
+    image_paths = []
+
+    #  src 값만 추출함
+    for src in IMG_SRC_PATTERN.findall(content):
+        root = settings.POST_IMAGE_UPLOAD_ROOT
+        root_without_slash = root.rstrip("/")
+
+        if root in src:
+            image_paths.append(src[src.index(root) :])
+        elif root_without_slash in src:
+            start = src.index(root_without_slash)
+            image_paths.append(src[start:])
+
+    return image_paths
+
 
 # 관리자 게시물 생성 서비스
 def create_post(*, validated_data, author):
-    return Post.objects.create(
+    post = Post.objects.create(
         author=author,
-        **validated_data, # 추후 데이터타입 확정되면 변경
+        **validated_data,
     )
+
+    image_paths = extract_post_image_paths_from_html(post.content)
+
+    if image_paths:
+        PostImage.objects.filter(
+            post__isnull=True,
+            path__in=image_paths,
+        ).update(post=post)
+
+    return post
