@@ -41,19 +41,24 @@ def create_post(*, validated_data, author):
     image_paths = extract_post_image_paths_from_html(post.content)
 
     if image_paths:
+        unique_image_paths = list(dict.fromkeys(image_paths))
+
         updated_count = PostImage.objects.filter(
             post__isnull=True,
-            path__in=image_paths,
+            path__in=unique_image_paths,
         ).update(post=post)
 
-        if updated_count != len(image_paths):
+        if updated_count != len(unique_image_paths):
             logger.warning(
                 "PostImage mapping failed",
                 extra={
                     "post_id": post.id,
                     "extracted_count": len(image_paths),
+                    "unique_extracted_count": len(unique_image_paths),
                     "updated_count": updated_count,
                     "image_paths": image_paths,
+                    "unique_image_paths": unique_image_paths,
                 },
             )
+
     return post
