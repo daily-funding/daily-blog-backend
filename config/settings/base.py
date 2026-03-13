@@ -3,7 +3,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -12,6 +11,9 @@ SECRET_KEY = "django-insecure-w%1=0%a&0@e1$uz(1fz1$(ppscgb54$kxbhqtb43z^h*glnuro
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
+POST_IMAGE_UPLOAD_ROOT = (
+    "images/posts"  # ckeditor와 s3에서 사용하는 공통 게시물 이미지 경로
+)
 
 # Application definition
 
@@ -22,7 +24,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "storages", # s3 관련
+    "storages",  # s3 관련
+    "ckeditor",  # editor
+    "ckeditor_uploader",  # editor
     "blog",
     "rest_framework",
 ]
