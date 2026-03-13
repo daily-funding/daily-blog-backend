@@ -192,7 +192,6 @@ class TestPostListView:
 
         # when
         response = client.get("/posts/")
-        print(response.data)
 
         # then
         assert response.data["results"][0]["post_id"] == post2.id
