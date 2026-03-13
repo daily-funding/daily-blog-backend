@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <title>게시물 작성</title>
+  {{ form.media }}
 </head>
 
 <body>
-  <h1>관리자 게시물 작성 </h1>
+  <h1>관리자 게시물 작성</h1>
 
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
