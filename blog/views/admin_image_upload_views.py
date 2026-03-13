@@ -39,7 +39,7 @@ def admin_image_upload_view(request):
         return JsonResponse(
             {
                 "uploaded": 0,
-                "error": {"messages": e.messages},
+                "error": {"message": e.messages[0]},
             },
             status=400,
         )
