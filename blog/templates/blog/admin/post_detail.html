@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>게시물 상세보기</title>
+</head>
+
+<body>
+
+  <h1>{{ post.title }}</h1>
+
+  <h3>{{ post.subtitle }}</h3>
+
+  <p>{{ post.description }}</p>
+
+  <p>
+    카테고리: {{ post.category.name }}
+  </p>
+
+  <p>
+    작성자: {{ post.author }}
+  </p>
+
+  <p>
+    작성일: {{ post.created_at }}
+  </p>
+
+  <hr>
+
+  <h2>썸네일</h2>
+
+  {% if post.preview_image %}
+  <img src="{{ post.preview_image.url }}" width="300">
+  {% endif %}
+
+  <hr>
+
+  <h2>본문</h2>
+
+  <div>
+    {{ post.content|safe }}
+  </div>
+
+  <hr>
+
+  <a href="/admin/blog/posts/">목록으로</a>
+
+</body>
+
+</html>
