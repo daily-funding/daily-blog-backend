@@ -17,7 +17,13 @@ class PostDetailView(APIView):
 class PostListView(APIView):
 
     def get(self, request):
+        filters = {
+            key: value
+            for key, value in request.query_params.items()
+            if key in ["category_id"]
+        }
+        posts = Post.objects.filter(**filters)
         pagination = PageNumberPagination()
-        posts = pagination.paginate_queryset(Post.objects.all(), request)
-        serializer = PostListSerializer(posts, many=True)
+        paginated_posts = pagination.paginate_queryset(posts, request)
+        serializer = PostListSerializer(paginated_posts, many=True)
         return pagination.get_paginated_response(serializer.data)
