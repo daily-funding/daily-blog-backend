@@ -1,4 +1,8 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # .env 읽음
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -7,12 +11,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-w%1=0%a&0@e1$uz(1fz1$(ppscgb54$kxbhqtb43z^h*glnuro"
+# 세션, CSRF 토큰, password 리셋 등에 사용됨
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
 POST_IMAGE_UPLOAD_ROOT = (
-    "images/posts"  # ckeditor와 s3에서 사용하는 공통 게시물 이미지 경로
+    "images/posts/"  # 게시물 이미지 업로드 경로 
 )
 
 # Application definition
@@ -30,6 +35,26 @@ INSTALLED_APPS = [
     "blog",
     "rest_framework",
 ]
+
+# django-ckeditor 기본 업로드 경로
+CKEDITOR_UPLOAD_PATH = POST_IMAGE_UPLOAD_ROOT
+
+# 관리자 게시물 작성용 에디터 설정
+CKEDITOR_CONFIGS = {
+    "admin_post": {
+        "height": 400,
+        "width": "100%",
+        "toolbar": [
+            ["Format", "Bold", "Italic", "Underline", "Strike"],
+            ["NumberedList", "BulletedList", "Blockquote"],
+            ["Link", "Unlink"],
+            ["Image", "Table", "HorizontalRule"],
+            ["RemoveFormat", "Source"],
+        ],
+        # 관리자 업로드 URL
+        "filebrowserUploadUrl": "/admin/blog/images/upload/",
+    }
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -57,6 +82,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = "config.wsgi.application"
 
