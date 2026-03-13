@@ -25,6 +25,14 @@ def admin_image_upload_view(request):
 
     # CKEditor4 업로드 응답 형식
     return HttpResponse(
-        f"", # 추후 작성
+        f"""
+        <script>
+            window.parent.CKEDITOR.tools.callFunction(
+                {ck_func_num},
+                "{image_url}",
+                ""
+            );
+        </script>
+        """,
         content_type="text/html",
     )
