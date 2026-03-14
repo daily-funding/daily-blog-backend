@@ -30,7 +30,8 @@ class PostListSerializer(serializers.ModelSerializer):
     post_id = serializers.IntegerField(source="id")
     category_name = relations.SlugRelatedField(
         source="category",
-        slug_field="name", read_only=True
+        slug_field="name",
+        read_only=True
     )
 
     class Meta:
@@ -40,5 +41,24 @@ class PostListSerializer(serializers.ModelSerializer):
             "category_name",
             "title",
             "description",
+            "preview_image",
+        ]
+
+class TopPostListSerializer(serializers.ModelSerializer):
+
+    post_id = serializers.IntegerField(source="id")
+    category_name = relations.SlugRelatedField(
+        source="category",
+        slug_field="name",
+        read_only=True
+    )
+
+    class Meta:
+        model = Post
+        fields = [
+            "post_id",
+            "category_name",
+            "title",
+            "subtitle",
             "preview_image",
         ]
