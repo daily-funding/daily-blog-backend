@@ -19,6 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = get_env_or_raise("SECRET_KEY")
 
 POST_IMAGE_UPLOAD_ROOT = "images/posts/"
+POST_IMAGE_UPLOAD_URL = "/admin/blog/images/upload/"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -47,7 +48,7 @@ CKEDITOR_CONFIGS = {
             ["Image", "Table", "HorizontalRule"],
             ["RemoveFormat", "Source"],
         ],
-        "filebrowserImageUploadUrl": "/admin/blog/images/upload/",
+        "filebrowserImageUploadUrl": POST_IMAGE_UPLOAD_URL,
     }
 }
 
@@ -124,7 +125,7 @@ STORAGES = {
     },
 }
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr"
 TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
 USE_TZ = True
