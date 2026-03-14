@@ -1,11 +1,16 @@
+from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from blog.exceptions import BlogException
-from blog.models import Post
-from blog.serializers.post_serializers import PostDetailSerializer, PostListSerializer
+from blog.models import Post, Pin
+from blog.serializers.post_serializers import (
+    PostDetailSerializer,
+    PostListSerializer,
+    TopPostListSerializer,
+)
 from blog.util.request_parser import get_query_string_filter
 
 
@@ -38,3 +43,17 @@ class PostListView(APIView):
         paginated_posts = pagination.paginate_queryset(posts, request)
         serializer = PostListSerializer(paginated_posts, many=True)
         return pagination.get_paginated_response(serializer.data)
+
+
+class TopPostListView(APIView):
+
+    def get(self, request):
+        pins = Pin.objects.filter(post=OuterRef("id"))
+        posts = (
+            Post.objects.select_related("category")
+            .annotate(sort_order=Subquery(pins.values("sort_order")[:1]))
+            .filter(sort_order__isnull=False)
+            .order_by("sort_order")
+        )
+        serializer = TopPostListSerializer(posts, many=True)
+        return Response(serializer.data)
