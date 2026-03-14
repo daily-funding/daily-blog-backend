@@ -5,7 +5,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models import CASCADE, SET_NULL
 
-POST_IMAGE_UPLOAD_PATH = "images/posts/"
+POST_IMAGE_UPLOAD_PATH = settings.POST_IMAGE_UPLOAD_ROOT
+# settings.py에서 관리하도록 수정
 
 
 def post_image_upload_to(instance, filename):  # s3의 images/posts/에 업로드 하는 함수
