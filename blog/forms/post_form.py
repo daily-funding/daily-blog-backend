@@ -1,10 +1,16 @@
-# blog/forms/post_form.py
 from django import forms
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 from blog.models import Post
 
-# author, created_at, updated_at은 입력받지 않음 
+
 class PostCreateForm(forms.ModelForm):
+    # ckeditor에는 본문만 적용
+    content = forms.CharField(
+        label="본문",
+        widget=CKEditorUploadingWidget(config_name="admin_post"),
+    )
+
     class Meta:
         model = Post
         fields = [
@@ -20,31 +26,14 @@ class PostCreateForm(forms.ModelForm):
             "title": "제목",
             "subtitle": "부제목",
             "description": "미리보기 설명",
-            "content": "본문",
             "preview_image": "썸네일 이미지",
         }
         widgets = {
             "category": forms.Select(),
-            "title": forms.TextInput(
-                attrs={
-                    "placeholder": "제목을 입력하세요",
-                }
-            ),
-            "subtitle": forms.TextInput(
-                attrs={
-                    "placeholder": "부제목을 입력하세요",
-                }
-            ),
+            "title": forms.TextInput(attrs={"placeholder": "제목을 입력하세요"}),
+            "subtitle": forms.TextInput(attrs={"placeholder": "부제목을 입력하세요"}),
             "description": forms.TextInput(
-                attrs={
-                    "placeholder": "미리보기 설명을 입력하세요",
-                }
-            ),
-            "content": forms.Textarea(
-                attrs={
-                    "placeholder": "본문을 입력하세요",
-                    "rows": 15,
-                }
+                attrs={"placeholder": "미리보기 설명을 입력하세요"}
             ),
         }
 

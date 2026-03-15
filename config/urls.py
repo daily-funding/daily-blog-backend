@@ -5,9 +5,11 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path("admin/blog/", include("blog.urls.admin_urls")), #admin보다 위에 와야함
+    path("admin/blog/", include("blog.urls.admin_urls")),  # admin보다 위에 와야함
     path("admin/", admin.site.urls),
     path("posts/", include("blog.urls.post_urls")),
+    path("posts/", include("blog.urls.public_urls")),
+    path("ckeditor/", include("ckeditor_uploader.urls")),  # ckeditor 경로
 ]
 
 
