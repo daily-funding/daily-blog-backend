@@ -54,11 +54,11 @@ def post_list(request):
 def top_post_list(request):
     """고정 게시물 목록 조회"""
     pins = Pin.objects.filter(post=OuterRef("id"))
-    posts = (
+    pinned_posts = (
         Post.objects.select_related("category")
         .annotate(sort_order=Subquery(pins.values("sort_order")[:1]))
         .filter(sort_order__isnull=False)
         .order_by("sort_order")
     )
-    serializer = TopPostListSerializer(posts, many=True)
+    serializer = TopPostListSerializer(pinned_posts, many=True)
     return Response(serializer.data)
