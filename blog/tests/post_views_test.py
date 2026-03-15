@@ -7,6 +7,7 @@ import pytest
 
 from blog.models import POST_IMAGE_UPLOAD_PATH
 from blog.tests.fixture.category_fixture import create_category
+from blog.tests.fixture.pin_fixture import create_pin
 from blog.tests.fixture.post_fixture import create_post
 from blog.tests.fixture.user_fixture import create_user
 
@@ -198,3 +199,65 @@ class TestPostListView:
         assert response.data["results"][0]["post_id"] == post2.id
         assert response.data["results"][1]["post_id"] == post1.id
         assert response.data["results"][2]["post_id"] == post3.id
+
+
+@pytest.mark.django_db
+class TestTopPostListView:
+
+    def test_retrieve_top_posts(self):
+        # given
+        client = APIClient()
+        user = create_user()
+        category = create_category()
+        preview_image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        post1 = create_post(category=category, preview_image=preview_image, author=user)
+        post2 = create_post(category=category, preview_image=preview_image, author=user)
+
+        create_pin(post=post1, sort_order=1)
+
+        # when
+        response = client.get("/posts/top/")
+
+        # then
+        assert response.status_code == 200
+        assert len(response.data) == 1
+        assert response.data[0]["post_id"] == post1.id
+        assert response.data[0]["category_name"] == category.name
+        assert response.data[0]["title"] == post1.title
+        assert response.data[0]["subtitle"] == post1.subtitle
+        assert POST_IMAGE_UPLOAD_PATH in response.data[0]["preview_image"]
+
+
+    def test_retrieve_top_posts_order_by_sort_order(self):
+        # given
+        client = APIClient()
+        user = create_user()
+        category = create_category()
+        preview_image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        post1 = create_post(category=category, preview_image=preview_image, author=user)
+        post2 = create_post(category=category, preview_image=preview_image, author=user)
+        post3 = create_post(category=category, preview_image=preview_image, author=user)
+        post4 = create_post(category=category, preview_image=preview_image, author=user)
+
+        create_pin(post=post1, sort_order=1)
+        create_pin(post=post3, sort_order=2)
+        create_pin(post=post4, sort_order=3)
+        create_pin(post=post2, sort_order=4)
+
+        # when
+        response = client.get("/posts/top/")
+
+        # then
+        assert response.status_code == 200
+        assert response.data[0]["post_id"] == post1.id
+        assert response.data[1]["post_id"] == post3.id
+        assert response.data[2]["post_id"] == post4.id
+        assert response.data[3]["post_id"] == post2.id
