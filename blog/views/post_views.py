@@ -1,4 +1,3 @@
-from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
@@ -10,8 +9,11 @@ from blog.serializers.post_serializers import (
     PostDetailSerializer,
     PostListSerializer,
     TopPostListSerializer,
+    InsightPostSerializer,
 )
 from blog.util.request_parser import get_query_string_filter
+
+INSIGHT_POSTS_COUNT = 6
 
 
 class PostPagination(PageNumberPagination):
@@ -61,3 +63,20 @@ def top_post_list(request):
     pinned_posts = [pin.post for pin in pins]
     serializer = TopPostListSerializer(pinned_posts, many=True)
     return Response({"posts": serializer.data})
+
+
+@api_view(["GET"])
+def insight_post_list(request, post_id):
+    """
+    인사이트 게시물 목록 조회
+    본 게시물을 제외하고 동일 카테고리 내 최신 게시물을 INSIGHT_POSTS_COUNT 개만큼 조회한다.
+    """
+    post = get_object_or_404(Post, pk=post_id)
+    insight_posts = (
+        Post.objects.select_related("category")
+        .filter(category=post.category)
+        .exclude(pk=post.pk)
+        .order_by("-created_at")[INSIGHT_POSTS_COUNT]
+    )
+    serializer = InsightPostSerializer(insight_posts, many=True)
+    return Response(serializer.data)
