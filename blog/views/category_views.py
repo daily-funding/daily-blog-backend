@@ -7,6 +7,6 @@ from blog.serializers.category_serializers import CategoryListSerializer
 
 @api_view(["GET"])
 def category_list(request):
-    categories = Category.objects.all()
+    categories = Category.objects.order_by("id")
     serializer = CategoryListSerializer(categories, many=True)
     return Response({"categories": serializer.data})
