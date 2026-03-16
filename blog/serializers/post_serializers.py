@@ -4,9 +4,13 @@ from rest_framework import serializers
 from blog.models import Post
 
 
-class PostDetailSerializer(serializers.ModelSerializer):
-
+class BasePostSerializer(serializers.ModelSerializer):
     post_id = serializers.IntegerField(source="id", read_only=True)
+    category_id = relations.SlugRelatedField(
+        source="category",
+        slug_field="id",
+        read_only=True
+    )
     category_name = relations.SlugRelatedField(
         source="category",
         slug_field="name",
@@ -15,8 +19,15 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
+        fields = []
+
+
+class PostDetailSerializer(BasePostSerializer):
+
+    class Meta(BasePostSerializer.Meta):
         fields = [
             "post_id",
+            "category_id",
             "category_name",
             "title",
             "subtitle",
@@ -25,17 +36,9 @@ class PostDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-class PostListSerializer(serializers.ModelSerializer):
+class PostListSerializer(BasePostSerializer):
 
-    post_id = serializers.IntegerField(source="id", read_only=True)
-    category_name = relations.SlugRelatedField(
-        source="category",
-        slug_field="name",
-        read_only=True
-    )
-
-    class Meta:
-        model = Post
+    class Meta(BasePostSerializer.Meta):
         fields = [
             "post_id",
             "category_name",
@@ -44,19 +47,13 @@ class PostListSerializer(serializers.ModelSerializer):
             "preview_image",
         ]
 
-class TopPostListSerializer(serializers.ModelSerializer):
 
-    post_id = serializers.IntegerField(source="id", read_only=True)
-    category_name = relations.SlugRelatedField(
-        source="category",
-        slug_field="name",
-        read_only=True
-    )
+class TopPostListSerializer(BasePostSerializer):
 
-    class Meta:
-        model = Post
+    class Meta(BasePostSerializer.Meta):
         fields = [
             "post_id",
+            "category_id",
             "category_name",
             "title",
             "subtitle",

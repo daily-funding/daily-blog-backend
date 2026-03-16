@@ -45,6 +45,7 @@ class TestPostDetailView:
         # then
         assert response.status_code == 200
         assert response.data["post_id"] == post.id
+        assert response.data["category_id"] == category.id
         assert response.data["category_name"] == category.name
         assert response.data["title"] == post.title
         assert response.data["subtitle"] == post.subtitle
@@ -225,6 +226,7 @@ class TestTopPostListView:
         assert response.status_code == 200
         assert len(response.data["posts"]) == 1
         assert response.data["posts"][0]["post_id"] == post1.id
+        assert response.data["posts"][0]["category_id"] == category.id
         assert response.data["posts"][0]["category_name"] == category.name
         assert response.data["posts"][0]["title"] == post1.title
         assert response.data["posts"][0]["subtitle"] == post1.subtitle
