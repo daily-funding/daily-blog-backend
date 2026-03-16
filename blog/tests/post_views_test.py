@@ -45,6 +45,7 @@ class TestPostDetailView:
         # then
         assert response.status_code == 200
         assert response.data["post_id"] == post.id
+        assert response.data["category_id"] == category.id
         assert response.data["category_name"] == category.name
         assert response.data["title"] == post.title
         assert response.data["subtitle"] == post.subtitle
@@ -226,11 +227,11 @@ class TestTopPostListView:
         assert response.status_code == 200
         assert len(response.data) == 1
         assert response.data[0]["post_id"] == post1.id
+        assert response.data[0]["category_id"] == category.id
         assert response.data[0]["category_name"] == category.name
         assert response.data[0]["title"] == post1.title
         assert response.data[0]["subtitle"] == post1.subtitle
         assert POST_IMAGE_UPLOAD_PATH in response.data[0]["preview_image"]
-
 
     def test_retrieve_top_posts_order_by_sort_order(self):
         # given
