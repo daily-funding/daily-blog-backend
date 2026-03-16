@@ -106,3 +106,18 @@ def test_admin_image_upload_rejects_corrupted_image_file(client, staff_user):
     data = response.json()
     assert data["uploaded"] == 0
     assert data["error"]["message"] == "유효한 이미지 파일이 아닙니다."
+
+
+@pytest.mark.django_db
+def test_post_image_delete():
+    image = PostImage.objects.create(
+        post=None,
+        path="images/posts/test.png",
+        capacity=100,
+    )
+
+    image_id = image.id
+
+    image.delete()
+
+    assert not PostImage.objects.filter(id=image_id).exists()
