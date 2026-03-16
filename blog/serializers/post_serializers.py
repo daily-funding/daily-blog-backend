@@ -5,7 +5,7 @@ from blog.models import Post
 
 
 class BasePostSerializer(serializers.ModelSerializer):
-    post_id = serializers.IntegerField(source="id")
+    post_id = serializers.IntegerField(source="id", read_only=True)
     category_id = relations.SlugRelatedField(
         source="category",
         slug_field="id",

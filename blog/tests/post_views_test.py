@@ -75,7 +75,6 @@ class TestPostListView:
 
         # when
         response = client.get("/posts/")
-        print(response.data)
 
         # then
         assert response.status_code == 200
@@ -225,13 +224,14 @@ class TestTopPostListView:
 
         # then
         assert response.status_code == 200
-        assert len(response.data) == 1
-        assert response.data[0]["post_id"] == post1.id
-        assert response.data[0]["category_id"] == category.id
-        assert response.data[0]["category_name"] == category.name
-        assert response.data[0]["title"] == post1.title
-        assert response.data[0]["subtitle"] == post1.subtitle
-        assert POST_IMAGE_UPLOAD_PATH in response.data[0]["preview_image"]
+        assert len(response.data["posts"]) == 1
+        assert response.data["posts"][0]["post_id"] == post1.id
+        assert response.data["posts"][0]["category_id"] == category.id
+        assert response.data["posts"][0]["category_name"] == category.name
+        assert response.data["posts"][0]["title"] == post1.title
+        assert response.data["posts"][0]["subtitle"] == post1.subtitle
+        assert POST_IMAGE_UPLOAD_PATH in response.data["posts"][0]["preview_image"]
+
 
     def test_retrieve_top_posts_order_by_sort_order(self):
         # given
@@ -258,7 +258,7 @@ class TestTopPostListView:
 
         # then
         assert response.status_code == 200
-        assert response.data[0]["post_id"] == post1.id
-        assert response.data[1]["post_id"] == post3.id
-        assert response.data[2]["post_id"] == post4.id
-        assert response.data[3]["post_id"] == post2.id
+        assert response.data["posts"][0]["post_id"] == post1.id
+        assert response.data["posts"][1]["post_id"] == post3.id
+        assert response.data["posts"][2]["post_id"] == post4.id
+        assert response.data["posts"][3]["post_id"] == post2.id
