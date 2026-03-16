@@ -4,8 +4,7 @@ from rest_framework import serializers
 from blog.models import Post
 
 
-class PostDetailSerializer(serializers.ModelSerializer):
-
+class BasePostSerializer(serializers.ModelSerializer):
     post_id = serializers.IntegerField(source="id")
     category_id = relations.SlugRelatedField(
         source="category",
@@ -20,6 +19,12 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
+        fields = []
+
+
+class PostDetailSerializer(BasePostSerializer):
+
+    class Meta(BasePostSerializer.Meta):
         fields = [
             "post_id",
             "category_id",
@@ -31,42 +36,21 @@ class PostDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-class PostListSerializer(serializers.ModelSerializer):
+class PostListSerializer(BasePostSerializer):
 
-    post_id = serializers.IntegerField(source="id")
-    category_name = relations.SlugRelatedField(
-        source="category",
-        slug_field="name",
-        read_only=True
-    )
-
-    class Meta:
-        model = Post
+    class Meta(BasePostSerializer.Meta):
         fields = [
             "post_id",
-            "category_id",
             "category_name",
             "title",
             "description",
             "preview_image",
         ]
 
-class TopPostListSerializer(serializers.ModelSerializer):
 
-    post_id = serializers.IntegerField(source="id")
-    category_id = relations.SlugRelatedField(
-        source="category",
-        slug_field="id",
-        read_only=True
-    )
-    category_name = relations.SlugRelatedField(
-        source="category",
-        slug_field="name",
-        read_only=True
-    )
+class TopPostListSerializer(BasePostSerializer):
 
-    class Meta:
-        model = Post
+    class Meta(BasePostSerializer.Meta):
         fields = [
             "post_id",
             "category_id",
