@@ -1,17 +1,8 @@
-import boto3
-from django.core.files.uploadedfile import SimpleUploadedFile
-from moto import mock_aws
 from rest_framework.test import APIClient
 
 import pytest
 
-from blog.models import POST_IMAGE_UPLOAD_PATH
 from blog.tests.fixture.category_fixture import create_category
-from blog.tests.fixture.pin_fixture import create_pin
-from blog.tests.fixture.post_fixture import create_post
-from blog.tests.fixture.user_fixture import create_user
-
-from freezegun import freeze_time
 
 @pytest.mark.django_db
 class TestCategoryListView:
