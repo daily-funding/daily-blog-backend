@@ -6,7 +6,7 @@ from blog.models import Post
 
 class PostDetailSerializer(serializers.ModelSerializer):
 
-    post_id = serializers.IntegerField(source="id")
+    post_id = serializers.IntegerField(source="id", read_only=True)
     category_name = relations.SlugRelatedField(
         source="category",
         slug_field="name",
@@ -27,7 +27,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 class PostListSerializer(serializers.ModelSerializer):
 
-    post_id = serializers.IntegerField(source="id")
+    post_id = serializers.IntegerField(source="id", read_only=True)
     category_name = relations.SlugRelatedField(
         source="category",
         slug_field="name",
@@ -46,7 +46,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
 class TopPostListSerializer(serializers.ModelSerializer):
 
-    post_id = serializers.IntegerField(source="id")
+    post_id = serializers.IntegerField(source="id", read_only=True)
     category_name = relations.SlugRelatedField(
         source="category",
         slug_field="name",

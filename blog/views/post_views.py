@@ -60,4 +60,4 @@ def top_post_list(request):
     )
     pinned_posts = [pin.post for pin in pins]
     serializer = TopPostListSerializer(pinned_posts, many=True)
-    return Response(serializer.data)
+    return Response({"posts": serializer.data})
