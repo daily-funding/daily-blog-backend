@@ -3,6 +3,7 @@ import pytest
 
 from blog.models import Post, PostImage
 from blog.services.post_create_service import create_post
+from blog.services.post_content_sanitize_service import sanitize_post_content
 
 
 @pytest.mark.django_db
@@ -94,3 +95,13 @@ def test_create_post_keeps_unmatched_post_images_null(
     post_image.refresh_from_db()
 
     assert post_image.post is None
+
+
+# sanitize 검증
+@pytest.mark.django_db
+def test_post_content_sanitize_removes_script():
+    raw = '<p>hello</p><script>alert("xss")</script>'
+
+    sanitized = sanitize_post_content(raw)
+
+    assert "<script>" not in sanitized
