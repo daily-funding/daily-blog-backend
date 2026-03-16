@@ -1,3 +1,4 @@
+# 생성 로직 / 이미지 연결
 import pytest
 
 from blog.models import Post, PostImage
