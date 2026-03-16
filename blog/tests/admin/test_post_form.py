@@ -1,75 +1,128 @@
-# 입력 검증
+# 업로드 API / 파일 검증
 
+import io
 import pytest
 
-from blog.forms.post_form import PostCreateForm
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.urls import reverse
+from PIL import Image
+
+from blog.models import PostImage
 
 
-@pytest.mark.django_db
-def test_post_create_form_valid(category, preview_image_file):
-    form = PostCreateForm(
-        data={
-            "category": category.id,
-            "title": "제목입니다",
-            "subtitle": "부제목입니다",
-            "description": "미리보기 설명입니다",
-            "content": "<p>본문입니다</p>",
-        },
-        files={
-            "preview_image": preview_image_file,
-        },
+def make_large_test_image():
+    image = Image.new("RGB", (4000, 4000), (255, 0, 0))
+    file_obj = io.BytesIO()
+    image.save(file_obj, format="PNG")
+    file_obj.seek(0)
+
+    return SimpleUploadedFile(
+        "large.png",
+        file_obj.read(),
+        content_type="image/png",
     )
 
-    assert form.is_valid()
+
+@pytest.mark.django_db
+def test_admin_image_upload_success(client, staff_user, content_image_file):
+    client.login(username="staffuser", password="testpass123")
+
+    url = reverse("blog:admin-image-upload")
+    response = client.post(
+        url,
+        data={"upload": content_image_file},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["uploaded"] == 1
+    assert "url" in data
+    assert PostImage.objects.filter(post__isnull=True).count() == 1
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "field,value,error_message",
-    [
-        ("title", "   ", "제목은 비워둘 수 없습니다."),
-        ("subtitle", "   ", "부제목은 비워둘 수 없습니다."),
-        ("description", "   ", "미리보기 설명은 비워둘 수 없습니다."),
-        ("content", "   ", "본문은 비워둘 수 없습니다."),
-    ],
-)
-def test_post_create_form_blank_field_invalid(
-    category,
-    preview_image_file,
-    field,
-    value,
-    error_message,
+@pytest.mark.parametrize("method_name", ["get", "put", "patch", "delete"])
+def test_admin_image_upload_rejects_non_post_methods(
+    client,
+    staff_user,
+    method_name,
 ):
-    data = {
-        "category": category.id,
-        "title": "제목입니다",
-        "subtitle": "부제목입니다",
-        "description": "미리보기 설명입니다",
-        "content": "<p>본문입니다</p>",
-    }
-    data[field] = value
+    client.login(username="staffuser", password="testpass123")
 
-    form = PostCreateForm(
-        data=data,
-        files={"preview_image": preview_image_file},
-    )
+    url = reverse("blog:admin-image-upload")
+    response = getattr(client, method_name)(url)
 
-    assert not form.is_valid()
-    assert field in form.errors
-    assert form.errors[field] == [error_message]
+    assert response.status_code == 400
+    assert "POST 요청만 허용됩니다." in response.content.decode()
 
 
 @pytest.mark.django_db
-def test_post_create_form_requires_preview_image(category):
-    form = PostCreateForm(
-        data={
-            "category": category.id,
-            "title": "제목입니다",
-            "subtitle": "부제목입니다",
-            "description": "미리보기 설명입니다",
-            "content": "<p>본문입니다</p>",
-        }
+def test_admin_image_upload_rejects_missing_file(client, staff_user):
+    client.login(username="staffuser", password="testpass123")
+
+    url = reverse("blog:admin-image-upload")
+    response = client.post(url, data={})
+
+    assert response.status_code == 400
+    data = response.json()
+    assert data["uploaded"] == 0
+    assert data["error"]["message"] == "업로드된 파일이 없습니다."
+
+
+@pytest.mark.django_db
+def test_admin_image_upload_rejects_invalid_content_type(client, staff_user):
+    client.login(username="staffuser", password="testpass123")
+
+    invalid_file = SimpleUploadedFile(
+        "test.txt",
+        b"not image",
+        content_type="text/plain",
     )
 
-    assert not form.is_valid()
-    assert "preview_image" in form.errors
+    url = reverse("blog:admin-image-upload")
+    response = client.post(
+        url,
+        data={"upload": invalid_file},
+    )
+
+    assert response.status_code == 400
+    data = response.json()
+    assert data["uploaded"] == 0
+    assert "지원하지 않는 이미지 형식입니다." in data["error"]["message"]
+
+
+@pytest.mark.django_db
+def test_admin_image_upload_rejects_corrupted_image_file(client, staff_user):
+    client.login(username="staffuser", password="testpass123")
+
+    invalid_image = SimpleUploadedFile(
+        "fake.png",
+        b"not really image bytes",
+        content_type="image/png",
+    )
+
+    url = reverse("blog:admin-image-upload")
+    response = client.post(
+        url,
+        data={"upload": invalid_image},
+    )
+
+    assert response.status_code == 400
+    data = response.json()
+    assert data["uploaded"] == 0
+    assert data["error"]["message"] == "유효한 이미지 파일이 아닙니다."
+
+
+@pytest.mark.django_db
+def test_post_image_delete():
+    image = PostImage.objects.create(
+        post=None,
+        path="images/posts/test.png",
+        capacity=100,
+    )
+
+    image_id = image.id
+
+    image.delete()
+
+    assert not PostImage.objects.filter(id=image_id).exists()
