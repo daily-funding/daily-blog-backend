@@ -1,5 +1,6 @@
 # 관리자 로직 공통 fixture
 import io
+import os
 import pytest
 
 from django.contrib.auth import get_user_model
@@ -16,9 +17,29 @@ def make_test_image_file(
     size=(100, 100),
     color=(255, 0, 0),
 ):
+    ext = os.path.splitext(filename)[1].lower()
+
+    format_map = {
+        ".png": ("PNG", "image/png"),
+        ".jpg": ("JPEG", "image/jpeg"),
+        ".jpeg": ("JPEG", "image/jpeg"),
+        ".webp": ("WEBP", "image/webp"),
+    }
+
+    if ext not in format_map:
+        raise ValueError(f"지원하지 않는 이미지 확장자입니다: {ext}")
+
+    image_format, expected_content_type = format_map[ext]
+
+    if content_type != expected_content_type:
+        raise ValueError(
+            f"filename 확장자와 content_type이 일치하지 않습니다: "
+            f"{filename} / {content_type}"
+        )
+
     file_obj = io.BytesIO()
     image = Image.new("RGB", size, color)
-    image.save(file_obj, format="PNG")
+    image.save(file_obj, format=image_format)
     file_obj.seek(0)
 
     return SimpleUploadedFile(
