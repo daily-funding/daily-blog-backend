@@ -1,28 +1,13 @@
-#  업로드 API / 파일 검증
+# 업로드 API / 파일 검증
 
-import io
 import pytest
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
-from PIL import Image
 
 from blog.models import PostImage
 
 pytestmark = pytest.mark.usefixtures("aws_mock")
-
-
-def make_large_test_image():
-    image = Image.new("RGB", (4000, 4000), (255, 0, 0))
-    file_obj = io.BytesIO()
-    image.save(file_obj, format="PNG")
-    file_obj.seek(0)
-
-    return SimpleUploadedFile(
-        "large.png",
-        file_obj.read(),
-        content_type="image/png",
-    )
 
 
 @pytest.mark.django_db
@@ -50,6 +35,7 @@ def test_admin_image_upload_rejects_non_post_methods(
     staff_user,
     method_name,
 ):
+<<<<<<< HEAD
     client.login(username="staffuser", password="testpass123")
 
     url = reverse("blog:admin-image-upload")
@@ -57,10 +43,12 @@ def test_admin_image_upload_rejects_non_post_methods(
 
 
 def test_admin_image_upload_requires_post_method(client, staff_user):
+=======
+>>>>>>> 9fb1c76 (refactor: 불필요한 테스트 코드 통합)
     client.login(username="staffuser", password="testpass123")
 
     url = reverse("blog:admin-image-upload")
-    response = client.get(url)
+    response = getattr(client, method_name)(url)
 
     assert response.status_code == 400
     assert "POST 요청만 허용됩니다." in response.content.decode()
