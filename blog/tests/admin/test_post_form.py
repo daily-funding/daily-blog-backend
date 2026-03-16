@@ -55,8 +55,8 @@ def test_post_create_form_blank_field_invalid(
     )
 
     assert not form.is_valid()
-    assert not form.is_valid()
     assert field in form.errors
+    assert form.errors[field] == [error_message]
 
 
 @pytest.mark.django_db
