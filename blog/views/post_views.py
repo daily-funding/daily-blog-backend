@@ -76,7 +76,7 @@ def insight_post_list(request, post_id):
         Post.objects.select_related("category")
         .filter(category=post.category)
         .exclude(pk=post.pk)
-        .order_by("-created_at")[INSIGHT_POSTS_COUNT]
+        .order_by("-created_at")[:INSIGHT_POSTS_COUNT]
     )
     serializer = InsightPostSerializer(insight_posts, many=True)
     return Response(serializer.data)
