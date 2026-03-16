@@ -16,6 +16,7 @@ def test_admin_post_create_view_requires_login(client):
     assert response.status_code == 302
 
 
+# 관리자 전용 게시물 생성 페이지에 일반 사용자가 접근하면 차단되는지 확인
 @pytest.mark.django_db
 def test_admin_post_create_view_denies_non_staff_user(client, normal_user):
     client.login(username="normaluser", password="testpass123")
