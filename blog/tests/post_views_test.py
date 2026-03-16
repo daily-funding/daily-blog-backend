@@ -223,7 +223,7 @@ class TestTopPostListView:
 
         # then
         assert response.status_code == 200
-        assert len(response.data) == 1
+        assert len(response.data["posts"]) == 1
         assert response.data["posts"][0]["post_id"] == post1.id
         assert response.data["posts"][0]["category_name"] == category.name
         assert response.data["posts"][0]["title"] == post1.title
