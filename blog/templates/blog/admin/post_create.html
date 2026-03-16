@@ -1,34 +1,117 @@
 {% extends "blog/admin/base.html" %}
 {% load static %}
 
-{% block title %}관리자 게시물 작성{% endblock %}
+<head>
+  <meta charset="UTF-8">
+  <title>게시물 작성</title>
+  {{ form.media }}
+  <link rel="stylesheet" href="/static/css/admin_post_create.css">
+</head>
 
-{% block content %}
-<div class="layout">
-  <h1>관리자 게시물 작성</h1>
+<body>
+  <div class="editor-page">
+    <form method="post" enctype="multipart/form-data" class="editor-form">
+      {% csrf_token %}
 
-  <form method="post" enctype="multipart/form-data" style="max-width: 700px;">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">등록</button>
-    <a href="{% url 'blog:admin-post-list' %}" class="btn btn-outline">목록으로</a>
-  </form>
-</div>
-{% endblock %}
+      <section class="editor-panel">
+        <div class="editor-top">
+          <a href="{% url 'blog:admin-post-list' %}" class="back-link">← 나가기</a>
+        </div>
 
-{% block extra_script %}
+        <div class="editor-fields">
+          <div class="field-group">
+            {{ form.title }}
+            {% if form.title.errors %}
+            <p class="field-error">{{ form.title.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="divider-line"></div>
+
+          <div class="field-group">
+            {{ form.subtitle }}
+            {% if form.subtitle.errors %}
+            <p class="field-error">{{ form.subtitle.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="field-group">
+            {{ form.description }}
+            {% if form.description.errors %}
+            <p class="field-error">{{ form.description.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="field-row">
+            <div class="field-block">
+              <label for="{{ form.category.id_for_label }}">카테고리</label>
+              {{ form.category }}
+              {% if form.category.errors %}
+              <p class="field-error">{{ form.category.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field-block">
+              <label for="{{ form.preview_image.id_for_label }}">썸네일</label>
+              {{ form.preview_image }}
+              {% if form.preview_image.errors %}
+              <p class="field-error">{{ form.preview_image.errors.0 }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="field-group content-group">
+            {{ form.content }}
+            {% if form.content.errors %}
+            <p class="field-error">{{ form.content.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="editor-bottom">
+          <button type="button" class="ghost-btn">임시저장</button>
+          <button type="submit" class="submit-btn">출간하기</button>
+        </div>
+      </section>
+
+      <section class="preview-panel">
+        <div class="preview-toolbar">
+          <button type="button" class="preview-mode-btn active" data-mode="desktop">데스크탑</button>
+          <button type="button" class="preview-mode-btn" data-mode="mobile">모바일</button>
+        </div>
+
+        <div class="preview-shell preview-desktop" id="preview-shell">
+          <article class="preview-content" id="preview-content">
+            <p class="preview-category" id="preview-category">카테고리</p>
+            <h1 class="preview-title" id="preview-title">제목을 입력하세요</h1>
+            <h2 class="preview-subtitle" id="preview-subtitle">부제목을 입력하세요</h2>
+            <p class="preview-description" id="preview-description">미리보기 설명을 입력하세요</p>
+
+            <div class="preview-image-wrap" id="preview-image-wrap" style="display:none;">
+              <img id="preview-image" alt="썸네일 미리보기">
+            </div>
+
+            <hr class="preview-hr">
+
+            <div class="preview-body" id="preview-body">
+              <p>본문 미리보기</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </form>
+  </div>
+
+  <script src="/static/js/admin_post_preview.js"></script>
   <script>
     function getCookie(name) {
       const cookies = document.cookie ? document.cookie.split(';') : [];
-
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
-
         if (cookie.startsWith(name + '=')) {
           return decodeURIComponent(cookie.substring(name.length + 1));
         }
       }
-
       return null;
     }
 
@@ -40,7 +123,6 @@
 
         editor.on("fileUploadRequest", function (evt) {
           const xhr = evt.data.fileLoader.xhr;
-
           if (csrfToken) {
             xhr.setRequestHeader("X-CSRFToken", csrfToken);
           }
@@ -48,4 +130,10 @@
       });
     });
   </script>
+<<<<<<< HEAD
 {% endblock %}
+=======
+</body>
+
+</html>
+>>>>>>> e11acf1 (feat: 미리보기 창 구현)
