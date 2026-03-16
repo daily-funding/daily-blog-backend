@@ -18,7 +18,6 @@ __pycache__/
 *$py.class
 .env
 db.sqlite3
-*/migrations/*
 
 .idea
 .vscode
