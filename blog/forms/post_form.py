@@ -5,10 +5,25 @@ from blog.models import Post
 
 
 class PostCreateForm(forms.ModelForm):
-    # ckeditor에는 본문만 적용
+    title = forms.CharField(
+        label="제목",
+        widget=forms.TextInput(attrs={"placeholder": "제목을 입력하세요"}),
+        error_messages={"required": "제목은 비워둘 수 없습니다."},
+    )
+    subtitle = forms.CharField(
+        label="부제목",
+        widget=forms.TextInput(attrs={"placeholder": "부제목을 입력하세요"}),
+        error_messages={"required": "부제목은 비워둘 수 없습니다."},
+    )
+    description = forms.CharField(
+        label="미리보기 설명",
+        widget=forms.TextInput(attrs={"placeholder": "미리보기 설명을 입력하세요"}),
+        error_messages={"required": "미리보기 설명은 비워둘 수 없습니다."},
+    )
     content = forms.CharField(
         label="본문",
         widget=CKEditorUploadingWidget(config_name="admin_post"),
+        error_messages={"required": "본문은 비워둘 수 없습니다."},
     )
 
     class Meta:
@@ -23,40 +38,20 @@ class PostCreateForm(forms.ModelForm):
         ]
         labels = {
             "category": "카테고리",
-            "title": "제목",
-            "subtitle": "부제목",
-            "description": "미리보기 설명",
             "preview_image": "썸네일 이미지",
         }
         widgets = {
             "category": forms.Select(),
-            "title": forms.TextInput(attrs={"placeholder": "제목을 입력하세요"}),
-            "subtitle": forms.TextInput(attrs={"placeholder": "부제목을 입력하세요"}),
-            "description": forms.TextInput(
-                attrs={"placeholder": "미리보기 설명을 입력하세요"}
-            ),
         }
 
     def clean_title(self):
-        title = self.cleaned_data["title"].strip()
-        if not title:
-            raise forms.ValidationError("제목은 비워둘 수 없습니다.")
-        return title
+        return self.cleaned_data["title"].strip()
 
     def clean_subtitle(self):
-        subtitle = self.cleaned_data["subtitle"].strip()
-        if not subtitle:
-            raise forms.ValidationError("부제목은 비워둘 수 없습니다.")
-        return subtitle
+        return self.cleaned_data["subtitle"].strip()
 
     def clean_description(self):
-        description = self.cleaned_data["description"].strip()
-        if not description:
-            raise forms.ValidationError("미리보기 설명은 비워둘 수 없습니다.")
-        return description
+        return self.cleaned_data["description"].strip()
 
     def clean_content(self):
-        content = self.cleaned_data["content"].strip()
-        if not content:
-            raise forms.ValidationError("본문은 비워둘 수 없습니다.")
-        return content
+        return self.cleaned_data["content"].strip()
