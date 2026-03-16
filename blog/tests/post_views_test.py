@@ -74,7 +74,6 @@ class TestPostListView:
 
         # when
         response = client.get("/posts/")
-        print(response.data)
 
         # then
         assert response.status_code == 200
