@@ -9,6 +9,7 @@ from PIL import Image
 from blog.models import Category
 
 
+# 테스트용 이미지 파일 생성
 def make_test_image_file(
     filename="test.png",
     content_type="image/png",
@@ -27,6 +28,7 @@ def make_test_image_file(
     )
 
 
+# 관리자 유저 생성
 @pytest.fixture
 def staff_user(db):
     User = get_user_model()
