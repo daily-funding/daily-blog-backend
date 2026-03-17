@@ -232,7 +232,6 @@ class TestTopPostListView:
         assert response.data["posts"][0]["subtitle"] == post1.subtitle
         assert POST_IMAGE_UPLOAD_PATH in response.data["posts"][0]["preview_image"]
 
-
     def test_retrieve_top_posts_order_by_sort_order(self):
         # given
         client = APIClient()
@@ -262,3 +261,53 @@ class TestTopPostListView:
         assert response.data["posts"][1]["post_id"] == post3.id
         assert response.data["posts"][2]["post_id"] == post4.id
         assert response.data["posts"][3]["post_id"] == post2.id
+
+@pytest.mark.django_db
+class TestInsightPostListView:
+
+    def test_retrieve_insight_posts(self):
+        # given
+        client = APIClient()
+        user = create_user()
+        category1 = create_category()
+        category2 = create_category()
+        preview_image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        with freeze_time("2024-01-01 00:00:00"):
+            post1 = create_post(category=category1, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-02 00:00:00"):
+            post2 = create_post(category=category1, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-03 00:00:00"):
+            post3 = create_post(category=category1, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-04 00:00:00"):
+            post4 = create_post(category=category2, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-05 00:00:00"):
+            post5 = create_post(category=category1, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-06 00:00:00"):
+            post6 = create_post(category=category1, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-07 00:00:00"):
+            post7 = create_post(category=category1, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-08 00:00:00"):
+            post8 = create_post(category=category1, preview_image=preview_image, author=user)
+        with freeze_time("2024-01-09 00:00:00"):
+            post9 = create_post(category=category1, preview_image=preview_image, author=user)
+
+        # when
+        response = client.get(f"/posts/{post3.id}/insight/")
+
+        # then
+        """
+        다른 카테고리인 post4, 본 게시물인 post3은 필터링된다.
+        post1는 최신순 6개에 들지 않아 제외된다.
+        """
+        assert response.status_code == 200
+        assert len(response.data["posts"]) == 6
+        assert response.data["posts"][0]["post_id"] == post9.id
+        assert response.data["posts"][1]["post_id"] == post8.id
+        assert response.data["posts"][2]["post_id"] == post7.id
+        assert response.data["posts"][3]["post_id"] == post6.id
+        assert response.data["posts"][4]["post_id"] == post5.id
+        assert response.data["posts"][5]["post_id"] == post2.id
