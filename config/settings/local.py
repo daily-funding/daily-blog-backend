@@ -19,4 +19,26 @@ DATABASES = {
     }
 }
 
+LOGGING["handlers"] = {
+    "console": {
+        "class": "logging.StreamHandler",
+        "formatter": "simple",
+    },
+}
 
+LOGGING["loggers"] = {
+    "django_guid": {
+        "level": "WARNING",
+        "propagate": False,
+    },
+    "blog": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+        "propagate": False,
+    },
+}
+
+LOGGING["root"] = {
+    "handlers": ["console"],
+    "level": "INFO",
+}
