@@ -37,6 +37,9 @@ pytest -s
 
 # 특정 파일의 특정 함수만 테스트
 pytest {테스트파일명}.py -k {테스트함수명}
+
+# 특정 폴더의 파일들만 테스트
+pytest blog/tests/admin -q
 ```
 
 cronjob 실행 등록

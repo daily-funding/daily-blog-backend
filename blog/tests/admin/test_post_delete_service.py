@@ -2,38 +2,17 @@
 from datetime import timedelta
 
 import pytest
-from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
-from blog.models import Category, Post, PostImage
+from blog.models import PostImage
 from blog.services.post_delete_service import delete_post
 
 
-User = get_user_model()
-
-
 @pytest.mark.django_db
-def test_delete_post_marks_post_images_for_cleanup():
-    user = User.objects.create_user(
-        username="staffuser",
-        password="testpass123",
-        is_staff=True,
-    )
-    category = Category.objects.create(name="테스트 카테고리")
-
-    post = Post.objects.create(
-        category=category,
-        author=user,
-        title="제목",
-        subtitle="부제목",
-        description="설명",
-        content="본문",
-    )
-
-    post_image = PostImage.objects.create(
+def test_delete_post_marks_post_images_for_cleanup(post, post_image_factory):
+    post_image = post_image_factory(
         post=post,
-        path=SimpleUploadedFile("test.png", b"file-content", content_type="image/png"),
+        filename="test.png",
         capacity=12,
     )
 

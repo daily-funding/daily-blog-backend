@@ -4,50 +4,30 @@ from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
-from django.contrib.auth import get_user_model
 from django.core.management import call_command
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
-from blog.models import Category, Post, PostImage
-
-
-User = get_user_model()
+from blog.models import PostImage
 
 
 @pytest.mark.django_db
-def test_cleanup_orphan_post_images_deletes_only_old_orphan_images():
-    user = User.objects.create_user(
-        username="staffuser",
-        password="testpass123",
-        is_staff=True,
-    )
-    category = Category.objects.create(name="테스트 카테고리")
-
-    post = Post.objects.create(
-        category=category,
-        author=user,
-        title="제목",
-        subtitle="부제목",
-        description="설명",
-        content="본문",
-    )
-
-    old_orphan_image = PostImage.objects.create(
+def test_cleanup_orphan_post_images_deletes_only_old_orphan_images(
+    post,
+    post_image_factory,
+):
+    old_orphan_image = post_image_factory(
         post=None,
-        path=SimpleUploadedFile("old.png", b"old-file", content_type="image/png"),
+        filename="old.png",
         capacity=10,
     )
-    recent_orphan_image = PostImage.objects.create(
+    recent_orphan_image = post_image_factory(
         post=None,
-        path=SimpleUploadedFile("recent.png", b"recent-file", content_type="image/png"),
+        filename="recent.png",
         capacity=11,
     )
-    attached_image = PostImage.objects.create(
+    attached_image = post_image_factory(
         post=post,
-        path=SimpleUploadedFile(
-            "attached.png", b"attached-file", content_type="image/png"
-        ),
+        filename="attached.png",
         capacity=12,
     )
 

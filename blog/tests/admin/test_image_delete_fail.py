@@ -5,17 +5,18 @@ from unittest.mock import patch
 
 import pytest
 from django.core.management import call_command
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
 from blog.models import PostImage
 
 
 @pytest.mark.django_db
-def test_cleanup_orphan_post_images_keeps_db_row_when_storage_delete_fails():
-    post_image = PostImage.objects.create(
+def test_cleanup_orphan_post_images_keeps_db_row_when_storage_delete_fails(
+    post_image_factory,
+):
+    post_image = post_image_factory(
         post=None,
-        path=SimpleUploadedFile("fail.png", b"fail-file", content_type="image/png"),
+        filename="fail.png",
         capacity=15,
     )
 
