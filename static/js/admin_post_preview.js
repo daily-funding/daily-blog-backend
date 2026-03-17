@@ -18,9 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     previewSubtitle.textContent = subtitleInput.value || "부제목을 입력하세요";
 
     if (categorySelect && categorySelect.selectedOptions.length > 0) {
-      const text = categorySelect.selectedOptions[0].text;
+      const selectedText = categorySelect.selectedOptions[0].text;
       previewCategory.textContent =
-        text && text !== "---------" ? text : "카테고리";
+        selectedText && selectedText !== "---------" ? selectedText : "카테고리";
     } else {
       previewCategory.textContent = "카테고리";
     }
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!file) {
       previewHero.style.backgroundImage = "none";
-      previewHero.style.backgroundColor = "#d9d9d9";
+      previewHero.style.backgroundColor = "#8f8f8f";
       return;
     }
 
