@@ -311,7 +311,7 @@ class TestInsightPostListView:
         assert response.data["posts"][3]["post_id"] == post6.id
         assert response.data["posts"][4]["post_id"] == post5.id
         assert response.data["posts"][5]["post_id"] == post2.id
-        assert (post["post_id"] != post4.id for post in response.data["posts"])
+        assert all(post["post_id"] != post4.id for post in response.data["posts"])
 
     def test_raise_404_when_not_exists_post(self):
         # given
