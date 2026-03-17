@@ -28,15 +28,9 @@ document.addEventListener("DOMContentLoaded", function () {
     previewSubtitle.textContent = subtitleInput.value || "부제목을 입력하세요";
 
     if (categorySelect && categorySelect.selectedOptions.length > 0) {
-<<<<<<< HEAD
       const selectedText = categorySelect.selectedOptions[0].text;
       previewCategory.textContent =
         selectedText && selectedText !== "---------" ? selectedText : "카테고리";
-=======
-      const text = categorySelect.selectedOptions[0].text;
-      previewCategory.textContent =
-        text && text !== "---------" ? text : "카테고리";
->>>>>>> ce5dae6 (feat: 디자인 창 미리보기 틀 구현)
     } else {
       previewCategory.textContent = "카테고리";
     }
@@ -52,21 +46,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!file) {
       previewHero.style.backgroundImage = "none";
-<<<<<<< HEAD
       previewHero.style.backgroundColor = "#8f8f8f";
       return;
     }
 
     currentPreviewImageUrl = URL.createObjectURL(file);
     previewHero.style.backgroundImage = `url("${currentPreviewImageUrl}")`;
-=======
-      previewHero.style.backgroundColor = "#d9d9d9";
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    previewHero.style.backgroundImage = `url("${objectUrl}")`;
->>>>>>> ce5dae6 (feat: 디자인 창 미리보기 틀 구현)
     previewHero.style.backgroundColor = "transparent";
   }
 
@@ -99,10 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   titleInput?.addEventListener("input", updateTextPreview);
   subtitleInput?.addEventListener("input", updateTextPreview);
-<<<<<<< HEAD
   descriptionInput?.addEventListener("input", updateDescriptionCounter);
-=======
->>>>>>> ce5dae6 (feat: 디자인 창 미리보기 틀 구현)
   categorySelect?.addEventListener("change", updateTextPreview);
   previewImageInput?.addEventListener("change", updateHeroImagePreview);
 
@@ -113,10 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   updateTextPreview();
-<<<<<<< HEAD
   updateDescriptionCounter();
-=======
->>>>>>> ce5dae6 (feat: 디자인 창 미리보기 틀 구현)
   updateHeroImagePreview();
   setPreviewMode("desktop");
 
