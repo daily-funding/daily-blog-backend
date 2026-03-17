@@ -1,4 +1,4 @@
-## 가상환경 세팅 
+## 가상환경 세팅
 ```bash
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -35,6 +35,13 @@ pytest -v
 #print 출력 보기
 pytest -s
 
-# 특정 파일의 특정 함수만 테스트 
+# 특정 파일의 특정 함수만 테스트
 pytest {테스트파일명}.py -k {테스트함수명}
+```
+
+cronjob 실행 등록
+```bash
+python manage.py crontab remove
+python manage.py crontab add
+python manage.py crontab show
 ```
