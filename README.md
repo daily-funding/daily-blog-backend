@@ -42,7 +42,7 @@ pytest {테스트파일명}.py -k {테스트함수명}
 pytest blog/tests/admin -q
 ```
 
-cronjob 실행 등록
+##  cronjob 실행 등록
 ```bash
 python manage.py crontab remove
 python manage.py crontab add
