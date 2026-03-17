@@ -1,43 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
   const titleInput = document.getElementById("id_title");
   const subtitleInput = document.getElementById("id_subtitle");
-  const descriptionInput = document.getElementById("id_description");
   const categorySelect = document.getElementById("id_category");
   const previewImageInput = document.getElementById("id_preview_image");
 
   const previewTitle = document.getElementById("preview-title");
   const previewSubtitle = document.getElementById("preview-subtitle");
-  const previewDescription = document.getElementById("preview-description");
   const previewCategory = document.getElementById("preview-category");
-  const previewImageWrap = document.getElementById("preview-image-wrap");
-  const previewImage = document.getElementById("preview-image");
   const previewBody = document.getElementById("preview-body");
   const previewShell = document.getElementById("preview-shell");
+  const previewHero = document.getElementById("preview-hero");
 
   const modeButtons = document.querySelectorAll(".preview-mode-btn");
 
   function updateTextPreview() {
     previewTitle.textContent = titleInput.value || "제목을 입력하세요";
     previewSubtitle.textContent = subtitleInput.value || "부제목을 입력하세요";
-    previewDescription.textContent = descriptionInput.value || "미리보기 설명을 입력하세요";
 
     if (categorySelect && categorySelect.selectedOptions.length > 0) {
-      previewCategory.textContent = categorySelect.selectedOptions[0].text || "카테고리";
+      const text = categorySelect.selectedOptions[0].text;
+      previewCategory.textContent =
+        text && text !== "---------" ? text : "카테고리";
+    } else {
+      previewCategory.textContent = "카테고리";
     }
   }
 
-  function updateImagePreview() {
+  function updateHeroImagePreview() {
     const file = previewImageInput.files[0];
 
     if (!file) {
-      previewImageWrap.style.display = "none";
-      previewImage.removeAttribute("src");
+      previewHero.style.backgroundImage = "none";
+      previewHero.style.backgroundColor = "#d9d9d9";
       return;
     }
 
     const objectUrl = URL.createObjectURL(file);
-    previewImage.src = objectUrl;
-    previewImageWrap.style.display = "block";
+    previewHero.style.backgroundImage = `url("${objectUrl}")`;
+    previewHero.style.backgroundColor = "transparent";
   }
 
   function bindEditorPreview() {
@@ -66,9 +66,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   titleInput?.addEventListener("input", updateTextPreview);
   subtitleInput?.addEventListener("input", updateTextPreview);
-  descriptionInput?.addEventListener("input", updateTextPreview);
   categorySelect?.addEventListener("change", updateTextPreview);
-  previewImageInput?.addEventListener("change", updateImagePreview);
+  previewImageInput?.addEventListener("change", updateHeroImagePreview);
 
   modeButtons.forEach((button) => {
     button.addEventListener("click", function () {
@@ -77,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   updateTextPreview();
-  updateImagePreview();
+  updateHeroImagePreview();
   setPreviewMode("desktop");
 
   if (window.CKEDITOR) {
