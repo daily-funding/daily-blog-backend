@@ -5,19 +5,12 @@
   },
   "name": "daily-blog-backend",
   "version": "1.0.0",
-<<<<<<< HEAD
   "description": "Tailwind CSS tooling for the daily-blog-backend project",
   "main": "index.js",
   "scripts": {
     "build:css": "npx `@tailwindcss/cli` -i ./static/src/input.css -o ./static/css/output.css",
     "watch:css": "npx `@tailwindcss/cli` -i ./static/src/input.css -o ./static/css/output.css --watch",
     "test": "echo \"No JS tests configured\""
-=======
-  "description": "```bash source .venv/bin/activate pip install -r requirements.txt ```",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
->>>>>>> 8187d94 (chore: tailwind 설치)
   },
   "repository": {
     "type": "git",
@@ -31,8 +24,4 @@
     "url": "https://github.com/daily-funding/daily-blog-backend/issues"
   },
   "homepage": "https://github.com/daily-funding/daily-blog-backend#readme"
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8187d94 (chore: tailwind 설치)

@@ -72,12 +72,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function setPreviewMode(mode) {
-<<<<<<< HEAD
     if (!previewShell) {
       return;
     }
-=======
->>>>>>> 3954699 (feat: 미리보기 창 크기 변환 로직 구현)
     previewShell.classList.remove("preview-desktop", "preview-mobile");
     previewShell.classList.add(mode === "mobile" ? "preview-mobile" : "preview-desktop");
 
