@@ -28,3 +28,8 @@ logs/*
 staticfiles/
 
 .DS_Store
+
+
+# Node
+node_modules/
+package-lock.json

@@ -1,0 +1,25 @@
+{
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.1",
+    "tailwindcss": "^4.2.1"
+  },
+  "name": "daily-blog-backend",
+  "version": "1.0.0",
+  "description": "```bash source .venv/bin/activate pip install -r requirements.txt ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daily-funding/daily-blog-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daily-funding/daily-blog-backend/issues"
+  },
+  "homepage": "https://github.com/daily-funding/daily-blog-backend#readme"
+}
