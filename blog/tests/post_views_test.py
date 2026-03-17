@@ -343,3 +343,22 @@ class TestInsightPostListView:
         assert response.status_code == 200
         assert len(response.data["posts"]) == 1
         assert response.data["posts"][0]["post_id"] == post2.id
+
+    def test_return_empty_list_when_only_reference_post_exists(self):
+        # given
+        client = APIClient()
+        user = create_user()
+        category = create_category()
+        preview_image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        post = create_post(category=category, preview_image=preview_image, author=user)
+
+        # when
+        response = client.get(f"/posts/{post.id}/insight/")
+
+        # then
+        assert response.status_code == 200
+        assert len(response.data["posts"]) == 0
