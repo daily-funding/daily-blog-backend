@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     "blog",
     "rest_framework",
     "django_guid",
-    "django_crontab",
 ]
 
 CKEDITOR_UPLOAD_PATH = POST_IMAGE_UPLOAD_ROOT
@@ -169,10 +168,3 @@ DJANGO_GUID = {
     'UUID_LENGTH': 8,
 }
 
-CRONJOBS = [
-    (
-        "0 3 * * *",
-        "django.core.management.call_command",
-        ["cleanup_orphan_post_images"],
-    ),
-]
