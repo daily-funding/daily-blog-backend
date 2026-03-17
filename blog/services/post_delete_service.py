@@ -8,7 +8,7 @@ from blog.models import Post, PostImage
 
 logger = logging.getLogger(__name__)
 
-# 게시물 삭제 후 이미지 post_id, updated_at 수정
+# 게시물 삭제 후 관련 이미지 post_id, updated_at 수정
 def mark_post_images_for_cleanup(post: Post) -> None:
     post_images = PostImage.objects.filter(post=post)
 
@@ -16,7 +16,7 @@ def mark_post_images_for_cleanup(post: Post) -> None:
         post_image.post = None
         post_image.save(update_fields=["post", "updated_at"])
 
-
+# 썸네일 삭제
 def delete_post_preview_image(post: Post) -> None:
     if not post.preview_image or not post.preview_image.name:
         return
@@ -36,6 +36,7 @@ def delete_post_preview_image(post: Post) -> None:
         )
 
 
+# 게시물 삭제
 @transaction.atomic
 def delete_post(post: Post) -> None:
     mark_post_images_for_cleanup(post)
@@ -46,6 +47,7 @@ def delete_post(post: Post) -> None:
 def get_cleanup_target_post_images():
     cutoff = timezone.now() - timedelta(hours=24)
 
+    #post_id=null이고, updated_at이 24시간이 지난 이미지를 target으로 함
     return PostImage.objects.filter(
         post__isnull=True,
         updated_at__lte=cutoff,
