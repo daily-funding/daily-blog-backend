@@ -318,7 +318,28 @@ class TestInsightPostListView:
         client = APIClient()
 
         # when
-        response = client.get(f"/posts/999/insight/")
+        response = client.get("/posts/999/insight/")
 
         # then
         assert response.status_code == 404
+
+    def test_return_less_than_six_posts_when_not_enough(self):
+        # given
+        client = APIClient()
+        user = create_user()
+        category = create_category()
+        preview_image = SimpleUploadedFile(
+            name="test.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        post1 = create_post(category=category, preview_image=preview_image, author=user)
+        post2 = create_post(category=category, preview_image=preview_image, author=user)
+
+        # when
+        response = client.get(f"/posts/{post1.id}/insight/")
+
+        # then
+        assert response.status_code == 200
+        assert len(response.data["posts"]) == 1
+        assert response.data["posts"][0]["post_id"] == post2.id
