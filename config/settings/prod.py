@@ -33,7 +33,7 @@ LOGGING["handlers"] = {
     "file": {
         "class": "logging.handlers.TimedRotatingFileHandler",
         "filename": BASE_DIR / "logs" / "prod.log",
-        "when": "D",
+        "when": "midnight",
         "interval": 1,
         "backupCount": 30,
         "formatter": "medium",
