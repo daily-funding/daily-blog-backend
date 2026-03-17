@@ -1,10 +1,11 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 
 from blog.forms import PostCreateForm
 from blog.models import Post
 from blog.services.post_create_service import create_post
+from blog.services.post_delete_service import delete_post
 from blog.services.post_content_sanitize_service import sanitize_post_content
 
 
@@ -54,3 +55,15 @@ def admin_post_detail_view(request, post_id):
             "sanitized_content": sanitized_content,
         },
     )
+
+
+@staff_member_required
+def admin_post_delete_view(request, post_id):
+    if request.method != "POST":
+        return HttpResponseBadRequest("POST 요청만 허용됩니다.")
+
+    post = get_object_or_404(Post, id=post_id)
+
+    delete_post(post)
+
+    return redirect("blog:admin-post-list")
