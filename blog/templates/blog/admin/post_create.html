@@ -75,30 +75,39 @@
       </section>
 
       <section class="preview-panel">
-        <div class="preview-toolbar">
-          <button type="button" class="preview-mode-btn active" data-mode="desktop">데스크탑</button>
-          <button type="button" class="preview-mode-btn" data-mode="mobile">모바일</button>
+  <div class="preview-toolbar">
+    <button type="button" class="preview-mode-btn active" data-mode="desktop">데스크탑</button>
+    <button type="button" class="preview-mode-btn" data-mode="mobile">모바일</button>
+  </div>
+
+  <div class="preview-shell preview-desktop" id="preview-shell">
+    <article class="preview-post">
+      <header class="preview-post-header">
+        <div class="preview-hero" id="preview-hero">
+          <div class="preview-hero-dim"></div>
+
+          <div class="preview-hero-top-icons">
+            <span class="preview-hero-back">←</span>
+            <span class="preview-hero-close">✕</span>
+          </div>
+
+          <div class="preview-hero-cover" id="preview-hero-cover">
+            <p class="preview-hero-category" id="preview-category">카테고리</p>
+            <h1 class="preview-hero-title" id="preview-title">제목을 입력하세요</h1>
+            <p class="preview-hero-subtitle" id="preview-subtitle">부제목을 입력하세요</p>
+            <div class="preview-hero-logo">Dailyfunding</div>
+          </div>
         </div>
+      </header>
 
-        <div class="preview-shell preview-desktop" id="preview-shell">
-          <article class="preview-content" id="preview-content">
-            <p class="preview-category" id="preview-category">카테고리</p>
-            <h1 class="preview-title" id="preview-title">제목을 입력하세요</h1>
-            <h2 class="preview-subtitle" id="preview-subtitle">부제목을 입력하세요</h2>
-            <p class="preview-description" id="preview-description">미리보기 설명을 입력하세요</p>
-
-            <div class="preview-image-wrap" id="preview-image-wrap" style="display:none;">
-              <img id="preview-image" alt="썸네일 미리보기">
-            </div>
-
-            <hr class="preview-hr">
-
-            <div class="preview-body" id="preview-body">
-              <p>본문 미리보기</p>
-            </div>
-          </article>
+      <section class="preview-article-body">
+        <div class="preview-body" id="preview-body">
+          <p>본문 미리보기</p>
         </div>
       </section>
+    </article>
+  </div>
+</section>
     </form>
   </div>
 
