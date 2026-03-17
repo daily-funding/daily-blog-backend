@@ -59,3 +59,14 @@ class TopPostListSerializer(BasePostSerializer):
             "subtitle",
             "preview_image",
         ]
+
+
+class InsightPostSerializer(BasePostSerializer):
+
+    class Meta(BasePostSerializer.Meta):
+        fields = [
+            "post_id",
+            "category_name",
+            "title",
+            "preview_image",
+        ]
