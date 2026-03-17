@@ -55,8 +55,15 @@ crontab -e
 python manage.py collectstatic
 ```
 
+<<<<<<< HEAD
 ## tailwind 명령어
 ```
 npx @tailwindcss/cli -i ./static/src/input.css -o ./static/css/output.css --watch
 ```
 
+=======
+# tailwind 명령어
+```
+npx @tailwindcss/cli -i ./static/src/input.css -o ./static/css/output.css --watch
+```
+>>>>>>> 8187d94 (chore: tailwind 설치)
