@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "ckeditor_uploader",
     "blog",
     "rest_framework",
+    "django_guid",
 ]
 
 CKEDITOR_UPLOAD_PATH = POST_IMAGE_UPLOAD_ROOT
@@ -54,6 +55,8 @@ CKEDITOR_CONFIGS = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "django_guid.middleware.guid_middleware",
+    "config.middlewares.logging_middleware.LoggingMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -148,15 +151,19 @@ LOGGING = {
             "format": "[{levelname}] {asctime} {name}: {message}",
             "style": "{",
         },
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
+        "medium": {
+            "format": "[{levelname}] [{correlation_id}] {asctime} {name}: {message}",
+            "style": "{",
         },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
+    }
+}
+
+DJANGO_GUID = {
+    'GUID_HEADER_NAME': 'Correlation-ID',
+    'VALIDATE_GUID': False,
+    'RETURN_HEADER': True,
+    'EXPOSE_HEADER': True,
+    'INTEGRATIONS': [],
+    'IGNORE_URLS': [],
+    'UUID_LENGTH': 8,
 }

@@ -24,4 +24,4 @@ db.sqlite3
 .vscode/settings.json
 
 images/*
-
+logs/*
