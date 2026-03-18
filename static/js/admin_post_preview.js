@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const titleInput = document.getElementById("id_title");
   const subtitleInput = document.getElementById("id_subtitle");
+  const descriptionInput = document.getElementById("id_description");
   const categorySelect = document.getElementById("id_category");
   const previewImageInput = document.getElementById("id_preview_image");
   const descriptionCounter = document.getElementById("description-counter");
