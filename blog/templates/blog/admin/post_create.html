@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="{% static 'css/admin_post_create.css' %}">
 {% endblock %}
 
-<<<<<<< HEAD
 {% block content %}
 <div class="editor-page">
   <form method="post" enctype="multipart/form-data" class="editor-form">
@@ -37,13 +36,6 @@
           {% if form.title.errors %}
           <p class="field-error">{{ form.title.errors.0 }}</p>
           {% endif %}
-=======
-      <section class="editor-panel">
-        <div class="editor-top">
-          <button type="button" class="back-btn" onclick="location.href='{% url 'blog:admin-post-list' %}'">
-            나가기
-          </button>
->>>>>>> 072e138 (design: 디자인 수정)
         </div>
 
         <div class="divider-line"></div>
