@@ -78,6 +78,17 @@ body {
   border-color: #041f66;
 }
 
+.submit-btn {
+  background: #05309d;
+  border-color: #05309d;
+  border-style: solid;
+  color: #ffffff;
+}
+
+.submit-btn:hover {
+  background: #041f66;
+  border-color: #041f66;
+}
 
 .editor-fields {
   flex: 1;
@@ -242,8 +253,13 @@ body {
 }
 
 .preview-panel {
-  background: #f6f7f8;
-  padding: 24px;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(5, 48, 157, 0.08), transparent 30%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
   overflow-y: auto;
 }
 
@@ -323,7 +339,6 @@ body {
 }
 
 .post_head_cover {
-  font-size:20px;
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -334,9 +349,7 @@ body {
 }
 
 .post_head_cover .center_div {
-  font-size:20px;
   text-align: center;
-  cursor: default;
 }
 
 .post_head_cover .category_badge {
@@ -368,7 +381,7 @@ body {
   letter-spacing: -1.2px;
 }
 
-.post_head_cover {
+.post_head_cover .bottom_div {
   position: absolute;
   left: calc(50% - 60px);
   bottom: 41px;
@@ -542,25 +555,26 @@ body {
     padding: 61px 26px 65px;
   }
 
-.preview-mobile .preview-body {
-  font-size: 18px;
-  letter-spacing: -0.54px;
-}
+  #id_subtitle,
+  #id_description {
+    min-height: 84px;
+  }
 
-.preview-mobile .preview-body h1 {
-  font-size: 26px;
-}
+  .preview-shell {
+    border-radius: 20px;
+  }
 
-.preview-mobile .preview-body h2 {
-  font-size: 22px;
-}
+  .preview-mobile,
+  .preview-desktop {
+    max-width: 100%;
+  }
 
-.preview-mobile .preview-body h3,
-.preview-mobile .preview-body h4 {
-  font-size: 18px;
-}
+  .preview-hero {
+    height: 580px;
+  }
 
-.preview-mobile .preview-body hr {
-  width: 100%;
-  background-size: contain;
+  .preview-mobile .preview-body hr {
+    width: 100%;
+    background-size: contain;
+  }
 }
