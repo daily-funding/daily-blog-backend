@@ -1,0 +1,206 @@
+/* Next.js handoff stylesheet for post detail body
+   - Import this file into the Next.js post detail page or global stylesheet.
+   - Place the separator asset at /public/images/hr_bar.png.
+*/
+
+.blog-post-content {
+  max-width: 878px;
+  margin: 0 auto;
+  color: #303030;
+  font-size: 22px;
+  font-weight: 300;
+  font-family: "Noto Sans KR", AppleGothic, Dotum, sans-serif;
+  line-height: 1.75;
+  letter-spacing: -0.66px;
+  word-break: break-word;
+}
+
+.blog-post-content small {
+  font-size: 18px;
+}
+
+.blog-post-content h1,
+.blog-post-content h2,
+.blog-post-content h3,
+.blog-post-content h4 {
+  margin: 1.2em 0 0.6em;
+  font-weight: 500;
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+.blog-post-content h1,
+.blog-post-content h2 {
+  font-size: 30px;
+}
+
+.blog-post-content h3 {
+  font-size: 28px;
+}
+
+.blog-post-content h4 {
+  font-size: 22px;
+}
+
+.blog-post-content p,
+.blog-post-content ul,
+.blog-post-content ol,
+.blog-post-content blockquote,
+.blog-post-content table,
+.blog-post-content figure,
+.blog-post-content pre {
+  margin: 0 0 1.2em;
+}
+
+.blog-post-content ul,
+.blog-post-content ol {
+  padding-left: 30px;
+}
+
+.blog-post-content ul li {
+  list-style: disc;
+}
+
+.blog-post-content ol li {
+  list-style: decimal;
+}
+
+.blog-post-content hr {
+  width: min(483px, 100%);
+  height: 21px;
+  margin: 60px auto;
+  border: none;
+  background-image: url("/images/hr_bar.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.blog-post-content img,
+.blog-post-content figure,
+.blog-post-content figure img,
+.blog-post-content .image,
+.blog-post-content .image img {
+  max-width: 100%;
+}
+
+.blog-post-content figure,
+.blog-post-content .image {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blog-post-content figure img,
+.blog-post-content .image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.blog-post-content figure figcaption,
+.blog-post-content .image > figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  padding: 0.6em;
+  color: #4b5563;
+  background: #f7f7f7;
+  font-size: 0.75em;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.blog-post-content .image-style-align-left {
+  float: left;
+  max-width: 50%;
+  margin-right: 16px;
+}
+
+.blog-post-content .image-style-align-right {
+  float: right;
+  max-width: 50%;
+  margin-left: 16px;
+}
+
+.blog-post-content .image-style-align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blog-post-content blockquote {
+  padding: 0 1.5em;
+  border-left: 5px solid #cccccc;
+  font-style: italic;
+}
+
+.blog-post-content table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.blog-post-content table table,
+.blog-post-content .table table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.blog-post-content table th,
+.blog-post-content table td,
+.blog-post-content .table table th,
+.blog-post-content .table table td {
+  min-width: 2em;
+  padding: 0.4em;
+  border: 1px solid #bfbfbf;
+}
+
+.blog-post-content table th,
+.blog-post-content .table table th {
+  background: #111827;
+  color: #ffffff;
+}
+
+.blog-post-content pre {
+  padding: 1em;
+  border: 1px solid #c4c4c4;
+  border-radius: 2px;
+  background: rgba(199, 199, 199, 0.3);
+  white-space: pre-wrap;
+}
+
+.blog-post-content code {
+  padding: 0.15em;
+  border-radius: 2px;
+  background: rgba(199, 199, 199, 0.3);
+}
+
+@media (max-width: 768px) {
+  .blog-post-content {
+    max-width: 682px;
+    font-size: 18px;
+    letter-spacing: -0.54px;
+  }
+
+  .blog-post-content small {
+    font-size: 15px;
+  }
+
+  .blog-post-content h1,
+  .blog-post-content h2 {
+    font-size: 26px;
+  }
+
+  .blog-post-content h3 {
+    font-size: 22px;
+  }
+
+  .blog-post-content h4 {
+    font-size: 18px;
+  }
+
+  .blog-post-content hr {
+    background-size: contain;
+  }
+}
