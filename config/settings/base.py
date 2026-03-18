@@ -63,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "config.middlewares.admin_access_middleware.AdminAccessMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -70,7 +71,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -155,16 +156,16 @@ LOGGING = {
             "format": "[{levelname}] [{correlation_id}] {asctime} {name}: {message}",
             "style": "{",
         },
-    }
+    },
 }
 
 DJANGO_GUID = {
-    'GUID_HEADER_NAME': 'Correlation-ID',
-    'VALIDATE_GUID': False,
-    'RETURN_HEADER': True,
-    'EXPOSE_HEADER': True,
-    'INTEGRATIONS': [],
-    'IGNORE_URLS': [],
-    'UUID_LENGTH': 8,
+    "GUID_HEADER_NAME": "Correlation-ID",
+    "VALIDATE_GUID": False,
+    "RETURN_HEADER": True,
+    "EXPOSE_HEADER": True,
+    "INTEGRATIONS": [],
+    "IGNORE_URLS": [],
+    "UUID_LENGTH": 8,
 }
 
