@@ -16,6 +16,8 @@ def get_env_or_raise(key: str) -> str:
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+LOGOUT_REDIRECT_URL = "admin:login"
+
 SECRET_KEY = get_env_or_raise("SECRET_KEY")
 
 POST_IMAGE_UPLOAD_ROOT = "images/posts/"
