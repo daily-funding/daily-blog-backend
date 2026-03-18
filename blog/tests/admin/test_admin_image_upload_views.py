@@ -32,16 +32,6 @@ def test_admin_image_upload_rejects_non_post_methods(
     staff_user,
     method_name,
 ):
-<<<<<<< HEAD
-    client.login(username="staffuser", password="testpass123")
-
-    url = reverse("blog:admin-image-upload")
-    response = getattr(client, method_name)(url)
-
-
-def test_admin_image_upload_requires_post_method(client, staff_user):
-=======
->>>>>>> 9fb1c76 (refactor: 불필요한 테스트 코드 통합)
     client.login(username="staffuser", password="testpass123")
 
     url = reverse("blog:admin-image-upload")
