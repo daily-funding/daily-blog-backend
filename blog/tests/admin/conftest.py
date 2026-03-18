@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
-from blog.models import Category
+from blog.models import Post, PostImage, Category
 
 
 # 테스트용 이미지 파일 생성
@@ -83,3 +83,42 @@ def preview_image_file():
 @pytest.fixture
 def content_image_file():
     return make_test_image_file(filename="content.png")
+
+
+@pytest.fixture
+def post(staff_user, category):
+    return Post.objects.create(
+        category=category,
+        author=staff_user,
+        title="제목",
+        subtitle="부제목",
+        description="설명",
+        content="본문",
+    )
+
+
+@pytest.fixture
+def post_image_factory(db):
+    def create_post_image(
+        *,
+        post=None,
+        filename="content.png",
+        content_type="image/png",
+        size=(100, 100),
+        color=(255, 0, 0),
+        capacity=10,
+    ):
+        image_file = make_test_image_file(
+            filename=filename,
+            content_type=content_type,
+            size=size,
+            color=color,
+        )
+
+        return PostImage.objects.create(
+            post=post,
+            path=image_file,
+            capacity=capacity,
+        )
+
+    return create_post_image

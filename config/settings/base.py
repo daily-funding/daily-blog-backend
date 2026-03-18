@@ -167,3 +167,4 @@ DJANGO_GUID = {
     'IGNORE_URLS': [],
     'UUID_LENGTH': 8,
 }
+
