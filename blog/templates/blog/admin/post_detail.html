@@ -1,54 +1,62 @@
-<!DOCTYPE html>
-<html lang="ko">
+{% extends "blog/admin/base.html" %}
+{% load static %}
 
-<head>
-  <meta charset="UTF-8">
-  <title>게시물 상세보기</title>
-</head>
+{% block title %}게시물 상세보기{% endblock %}
 
-<body>
+{% block content %}
+<div class="layout">
+    <h1>{{ post.title }}</h1>
 
-  <h1>{{ post.title }}</h1>
+    <h3>{{ post.subtitle }}</h3>
 
-  <h3>{{ post.subtitle }}</h3>
+    <p>{{ post.description }}</p>
 
-  <p>{{ post.description }}</p>
+    <p>
+        카테고리:
+        {% if post.category %}
+        {{ post.category.name }}
+        {% else %}
+        -
+        {% endif %}
+    </p>
 
-  <p>
-    카테고리: {{ post.category.name }}
-  </p>
+    <p>작성자: {{ post.author }}</p>
+    <p>작성일: {{ post.created_at|date:"Y-m-d H:i" }}</p>
 
-  <p>
-    작성자: {{ post.author }}
-  </p>
+    <hr>
 
-  <p>
-    작성일: {{ post.created_at }}
-  </p>
+    <h2>썸네일</h2>
 
-  <hr>
+    {% if post.preview_image %}
+    <img src="{{ post.preview_image.url }}" width="300" alt="썸네일">
+    {% else %}
+    <p class="text-muted">등록된 썸네일이 없습니다.</p>
+    {% endif %}
 
-  <h2>썸네일</h2>
+    <hr>
 
-  {% if post.preview_image %}
-  <img src="{{ post.preview_image.url }}" width="300">
-  {% endif %}
+    <h2>본문</h2>
 
-  <hr>
+    <div class="content-box">
+        {{ sanitized_content|safe }}
+    </div>
 
-  <h2>본문</h2>
+    <hr>
 
-  <div>
-    {{ sanitized_content|safe }}
-  </div>
+    <div class="action-group">
+        <a
+            href="{% url 'blog:admin-post-list' %}{% if query_string %}?{{ query_string }}{% endif %}"
+            class="btn btn-outline"
+        >
+            목록으로
+        </a>
+        <form method="post" action="{% url 'blog:admin-post-delete' post.id %}" class="inline-form">
+            {% csrf_token %}
+            <button type="submit" class="btn">삭제</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
 
-  <hr>
-
-  <a href="/admin/blog/posts/">목록으로</a>
-  <form method="post" action="{% url 'blog:admin-post-delete' post.id %}">
-    {% csrf_token %}
-    <button type="submit">삭제</button>
-  </form>
-</body>
-
-</html>
+{% block extra_script %}
+{% endblock %}
