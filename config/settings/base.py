@@ -54,8 +54,12 @@ CKEDITOR_CONFIGS = {
             ["Image", "Table", "HorizontalRule"],
             ["RemoveFormat", "Source"],
         ],
+<<<<<<< HEAD
         "extraPlugins": "colorbutton,colordialog,justify,image2,widget,lineutils",
         "removePlugins": "image",
+=======
+        "extraPlugins": "colorbutton,colordialog,justify",
+>>>>>>> 68beed3 (feat: ckeditor 기능 추가)
         "contentsCss": ["/static/css/blog_post_content.css"],
         "bodyClass": "blog-post-content",
         "filebrowserImageUploadUrl": POST_IMAGE_UPLOAD_URL,
