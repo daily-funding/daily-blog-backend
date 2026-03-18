@@ -1,6 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseNotAllowed   
 
 from blog.forms import PostCreateForm
 from blog.models import Post
@@ -60,10 +60,8 @@ def admin_post_detail_view(request, post_id):
 @staff_member_required
 def admin_post_delete_view(request, post_id):
     if request.method != "POST":
-        return HttpResponseBadRequest("POST 요청만 허용됩니다.")
+        return HttpResponseNotAllowed("POST 요청만 허용됩니다.")
 
     post = get_object_or_404(Post, id=post_id)
-
     delete_post(post)
-
     return redirect("blog:admin-post-list")
