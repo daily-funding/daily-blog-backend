@@ -43,15 +43,20 @@ CKEDITOR_UPLOAD_PATH = POST_IMAGE_UPLOAD_ROOT
 
 CKEDITOR_CONFIGS = {
     "admin_post": {
-        "height": 400,
+        "height": 560,
         "width": "100%",
         "toolbar": [
-            ["Format", "Bold", "Italic", "Underline", "Strike"],
+            ["Format", "FontSize"],
+            ["Bold", "Italic", "Underline", "Strike", "TextColor", "BGColor"],
             ["NumberedList", "BulletedList", "Blockquote"],
+            ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
             ["Link", "Unlink"],
             ["Image", "Table", "HorizontalRule"],
             ["RemoveFormat", "Source"],
         ],
+        "extraPlugins": "colorbutton,colordialog,justify",
+        "contentsCss": ["/static/css/blog_post_content.css"],
+        "bodyClass": "blog-post-content",
         "filebrowserImageUploadUrl": POST_IMAGE_UPLOAD_URL,
     }
 }
