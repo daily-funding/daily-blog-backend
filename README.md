@@ -49,3 +49,8 @@ crontab -e
 
 0 3 * * * cd /home/ubuntu/daily-blog-backend && DJANGO_SETTINGS_MODULE=config.settings.prod /home/ubuntu/daily-blog-backend/.venv/bin/python manage.py cleanup_orphan_post_images >> /home/ubuntu/daily_blog_cleanup.log 2>&1
 ```
+
+## static 파일 사용설정
+```bash
+python manage.py collectstatic
+```
