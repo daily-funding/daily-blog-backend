@@ -3,9 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>게시물 작성</title>
   {{ form.media }}
-  <link rel="stylesheet" href="/static/css/admin_post_create.css">
+  <link rel="stylesheet" href="{% static 'css/blog_post_content.css' %}">
+  <link rel="stylesheet" href="{% static 'css/admin_post_create.css' %}">
 </head>
 
 <body>
@@ -16,12 +18,21 @@
       <section class="editor-panel">
         <div class="editor-top">
           <button type="button" class="back-btn" onclick="location.href='{% url 'blog:admin-post-list' %}'">
-            나가기
+            목록으로
           </button>
         </div>
 
         <div class="editor-fields">
+          {% if form.non_field_errors %}
+          <div class="form-error-box" role="alert">
+            {% for error in form.non_field_errors %}
+            <p class="field-error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+
           <div class="field-group">
+            <label for="{{ form.title.id_for_label }}" class="field-label">제목</label>
             {{ form.title }}
             {% if form.title.errors %}
             <p class="field-error">{{ form.title.errors.0 }}</p>
@@ -31,6 +42,7 @@
           <div class="divider-line"></div>
 
           <div class="field-group">
+            <label for="{{ form.subtitle.id_for_label }}" class="field-label">부제목</label>
             {{ form.subtitle }}
             {% if form.subtitle.errors %}
             <p class="field-error">{{ form.subtitle.errors.0 }}</p>
@@ -38,7 +50,9 @@
           </div>
 
           <div class="field-group">
+            <label for="{{ form.description.id_for_label }}" class="field-label">미리보기 설명</label>
             {{ form.description }}
+            <p class="field-counter" id="description-counter" aria-live="polite">0/150</p>
             {% if form.description.errors %}
             <p class="field-error">{{ form.description.errors.0 }}</p>
             {% endif %}
@@ -88,11 +102,11 @@
                 <div class="preview-hero-dim"></div>
 
                 <div class="preview-hero-top-icons">
-                  <img src="{% static 'images/arrowbtn.png' %}" alt="뒤로가기" class="preview-hero-back" />
-                  <img src="{% static 'images/closebtn.png' %}" alt="닫기" class="preview-hero-close" />
+                  <img src="{% static 'images/arrowbtn.png' %}" alt="" aria-hidden="true" class="preview-hero-back">
+                  <img src="{% static 'images/closebtn.png' %}" alt="" aria-hidden="true" class="preview-hero-close">
                 </div>
 
-                <div class="post_head_cover" id="preview-hero-cover">
+                <div class="post_head_cover">
                   <div class="center_div">
                     <p class="category_badge" id="preview-category">카테고리</p>
                     <h1 class="title" id="preview-title">제목을 입력하세요</h1>
@@ -100,15 +114,14 @@
                   </div>
 
                   <div class="bottom_div">
-                    <img src="{% static 'images/dailyfundinglogo.png' %}" alt="데일리펀딩"
-                      class="preview-dailyfunding-logo" />
+                    <img src="{% static 'images/dailyfundinglogo.png' %}" alt="데일리펀딩" class="preview-dailyfunding-logo">
                   </div>
                 </div>
               </div>
             </header>
 
             <section class="preview-article-body">
-              <div class="preview-body" id="preview-body">
+              <div class="preview-body blog-post-content" id="preview-body">
                 <p>본문 미리보기</p>
               </div>
             </section>
@@ -118,7 +131,7 @@
     </form>
   </div>
 
-  <script src="/static/js/admin_post_preview.js"></script>
+  <script src="{% static 'js/admin_post_preview.js' %}"></script>
   <script>
     function getCookie(name) {
       const cookies = document.cookie ? document.cookie.split(';') : [];
@@ -133,6 +146,10 @@
 
     document.addEventListener("DOMContentLoaded", function () {
       const csrfToken = getCookie("csrftoken");
+
+      if (!window.CKEDITOR) {
+        return;
+      }
 
       CKEDITOR.on("instanceReady", function (event) {
         const editor = event.editor;
