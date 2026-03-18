@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}데일리펀딩 블로그 관리자{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/admin_common.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <a href="{% url 'blog:admin-post-list' %}" class="admin-logo-link">
+                <img src="{% static 'blog/image/dailylogo.png' %}" alt="데일리펀딩 로고" class="admin-logo">
+            </a>
+
+            <nav class="admin-nav">
+                <a href="{% url 'blog:admin-post-list' %}" class="admin-nav-link">게시물 목록 조회</a>
+                <a href="{% url 'blog:admin-category-manage' %}" class="admin-nav-link">카테고리 관리</a>
+                <a href="{% url 'blog:admin-post-create' %}" class="admin-nav-link">게시물 작성</a>
+                <a href="https://blog.dailyfunding.cloud/" class="admin-nav-link">유저 페이지 이동</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_script %}{% endblock %}
+</body>
+
+</html>
