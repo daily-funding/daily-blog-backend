@@ -1,12 +1,10 @@
 import logging
 from datetime import timedelta
-
 from django.db import transaction
-from django.utils import timezone
-
 from blog.models import Post, PostImage
 
 logger = logging.getLogger(__name__)
+
 
 # 게시물 삭제 후 관련 이미지 post_id, updated_at 수정
 def mark_post_images_for_cleanup(post: Post) -> None:
@@ -16,6 +14,7 @@ def mark_post_images_for_cleanup(post: Post) -> None:
         post_image.post = None
         post_image.save(update_fields=["post", "updated_at"])
 
+
 # 썸네일 삭제
 def delete_post_preview_image(post: Post) -> None:
     if not post.preview_image or not post.preview_image.name:
@@ -23,6 +22,7 @@ def delete_post_preview_image(post: Post) -> None:
 
     file_name = post.preview_image.name
     storage = post.preview_image.storage
+    path = post.preview_image.path
 
     try:
         storage.delete(file_name)
@@ -32,6 +32,7 @@ def delete_post_preview_image(post: Post) -> None:
             extra={
                 "post_id": post.id,
                 "file_name": file_name,
+                "path": path,
             },
         )
 
@@ -42,13 +43,3 @@ def delete_post(post: Post) -> None:
     mark_post_images_for_cleanup(post)
     delete_post_preview_image(post)
     post.delete()
-
-
-def get_cleanup_target_post_images():
-    cutoff = timezone.now() - timedelta(hours=24)
-
-    #post_id=null이고, updated_at이 24시간이 지난 이미지를 target으로 함
-    return PostImage.objects.filter(
-        post__isnull=True,
-        updated_at__lte=cutoff,
-    )
