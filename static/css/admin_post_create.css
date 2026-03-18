@@ -78,6 +78,7 @@ body {
   border-color: #041f66;
 }
 
+
 .editor-fields {
   flex: 1;
 }
@@ -322,6 +323,7 @@ body {
 }
 
 .post_head_cover {
+  font-size:20px;
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -332,6 +334,7 @@ body {
 }
 
 .post_head_cover .center_div {
+  font-size:20px;
   text-align: center;
   cursor: default;
 }
