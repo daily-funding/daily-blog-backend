@@ -69,7 +69,6 @@
         </div>
 
         <div class="editor-bottom">
-          <button type="button" class="ghost-btn">임시저장</button>
           <button type="submit" class="submit-btn">출간하기</button>
         </div>
       </section>
@@ -87,8 +86,8 @@
                 <div class="preview-hero-dim"></div>
 
                 <div class="preview-hero-top-icons">
-                  <span class="preview-hero-back">←</span>
-                  <span class="preview-hero-close">✕</span>
+                  <img src="{% static 'images/arrowbtn.png' %}" alt="뒤로가기" class="preview-hero-back" />
+                  <img src="{% static 'images/closebtn.png' %}" alt="닫기" class="preview-hero-close" />
                 </div>
 
                 <div class="post_head_cover" id="preview-hero-cover">
@@ -99,7 +98,8 @@
                   </div>
 
                   <div class="bottom_div">
-                    <span>Dailyfunding</span>
+                    <img src="{% static 'images/dailyfundinglogo.png' %}" alt="데일리펀딩"
+                      class="preview-dailyfunding-logo" />
                   </div>
                 </div>
               </div>
@@ -144,10 +144,7 @@
       });
     });
   </script>
-<<<<<<< HEAD
-{% endblock %}
-=======
+  {% endblock %}
 </body>
 
 </html>
->>>>>>> e11acf1 (feat: 미리보기 창 구현)
