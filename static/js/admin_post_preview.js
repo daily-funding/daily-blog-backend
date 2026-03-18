@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
   const titleInput = document.getElementById("id_title");
   const subtitleInput = document.getElementById("id_subtitle");
+  const descriptionInput = document.getElementById("id_description");
   const categorySelect = document.getElementById("id_category");
   const previewImageInput = document.getElementById("id_preview_image");
+  const descriptionCounter = document.getElementById("description-counter");
 
   const previewTitle = document.getElementById("preview-title");
   const previewSubtitle = document.getElementById("preview-subtitle");
@@ -12,6 +14,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const previewHero = document.getElementById("preview-hero");
 
   const modeButtons = document.querySelectorAll(".preview-mode-btn");
+  let currentPreviewImageUrl = null;
+
+  function updateDescriptionCounter() {
+    if (!descriptionInput || !descriptionCounter) {
+      return;
+    }
+
+    descriptionCounter.textContent = `${descriptionInput.value.length}/150`;
+  }
 
   function updateTextPreview() {
     previewTitle.textContent = titleInput.value || "제목을 입력하세요";
@@ -29,14 +40,19 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateHeroImagePreview() {
     const file = previewImageInput.files[0];
 
+    if (currentPreviewImageUrl) {
+      URL.revokeObjectURL(currentPreviewImageUrl);
+      currentPreviewImageUrl = null;
+    }
+
     if (!file) {
       previewHero.style.backgroundImage = "none";
       previewHero.style.backgroundColor = "#8f8f8f";
       return;
     }
 
-    const objectUrl = URL.createObjectURL(file);
-    previewHero.style.backgroundImage = `url("${objectUrl}")`;
+    currentPreviewImageUrl = URL.createObjectURL(file);
+    previewHero.style.backgroundImage = `url("${currentPreviewImageUrl}")`;
     previewHero.style.backgroundColor = "transparent";
   }
 
@@ -66,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   titleInput?.addEventListener("input", updateTextPreview);
   subtitleInput?.addEventListener("input", updateTextPreview);
+  descriptionInput?.addEventListener("input", updateDescriptionCounter);
   categorySelect?.addEventListener("change", updateTextPreview);
   previewImageInput?.addEventListener("change", updateHeroImagePreview);
 
@@ -76,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   updateTextPreview();
+  updateDescriptionCounter();
   updateHeroImagePreview();
   setPreviewMode("desktop");
 
@@ -84,4 +102,10 @@ document.addEventListener("DOMContentLoaded", function () {
       bindEditorPreview();
     });
   }
+
+  window.addEventListener("beforeunload", function () {
+    if (currentPreviewImageUrl) {
+      URL.revokeObjectURL(currentPreviewImageUrl);
+    }
+  });
 });
