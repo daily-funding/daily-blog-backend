@@ -77,6 +77,11 @@
         class="back-btn post-detail-btn">
         목록으로
       </a>
+
+      <a href="{% url 'blog:admin-post-edit' post.id %}" class="back-btn post-detail-btn">
+        수정
+      </a>
+
       <form method="post" action="{% url 'blog:admin-post-delete' post.id %}" class="post-detail-inline-form">
         {% csrf_token %}
         <button type="submit" class="submit-btn post-detail-btn">삭제</button>
