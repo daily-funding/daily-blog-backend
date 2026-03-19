@@ -5,6 +5,8 @@ from blog.models import Post, PostImage
 from blog.services.post_create_service import create_post
 from blog.services.post_content_sanitize_service import sanitize_post_content
 
+pytestmark = pytest.mark.usefixtures("aws_mock")
+
 
 @pytest.mark.django_db
 def test_create_post_binds_post_images_when_content_contains_image_paths(
@@ -95,6 +97,21 @@ def test_create_post_keeps_unmatched_post_images_null(
     post_image.refresh_from_db()
 
     assert post_image.post is None
+
+
+@pytest.mark.django_db
+def test_create_post_compresses_preview_image_to_webp(category, staff_user, preview_image_file):
+    validated_data = {
+        "category": category,
+        "title": "제목",
+        "subtitle": "부제",
+        "description": "설명",
+        "content": "<p>본문</p>",
+        "preview_image": preview_image_file,
+    }
+    post = create_post(validated_data=validated_data, author=staff_user)
+
+    assert post.preview_image.name.endswith(".webp")
 
 
 # sanitize 검증

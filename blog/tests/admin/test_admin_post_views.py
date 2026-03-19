@@ -1,10 +1,11 @@
 # 접근 권한 / redirect / 상세보기
-
 import pytest
 
 from django.urls import reverse
 
 from blog.models import Post, PostImage
+
+pytestmark = pytest.mark.usefixtures("aws_mock")
 
 
 @pytest.mark.django_db

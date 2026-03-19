@@ -9,6 +9,8 @@ from django.utils import timezone
 
 from blog.models import PostImage
 
+pytestmark = pytest.mark.usefixtures("aws_mock")
+
 
 @pytest.mark.django_db
 def test_cleanup_orphan_post_images_deletes_only_old_orphan_images(

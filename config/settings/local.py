@@ -36,6 +36,10 @@ LOGGING["loggers"] = {
         "level": "DEBUG",
         "propagate": False,
     },
+    # "django.db.backends": {
+    #     "handlers": ["console"],
+    #     "level": "DEBUG",
+    # },
 }
 
 LOGGING["root"] = {

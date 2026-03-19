@@ -1,5 +1,9 @@
+import io
+import os
+
 from django.core.exceptions import ValidationError
-from PIL import Image, UnidentifiedImageError
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image, ImageOps, UnidentifiedImageError
 
 ALLOWED_IMAGE_CONTENT_TYPES = {
     "image/jpeg",
@@ -32,3 +36,33 @@ def validate_uploaded_image(uploaded_file):
     except (UnidentifiedImageError, OSError):
         # 실제 파일이 진짜 이미지인지 확인
         raise ValidationError("유효한 이미지 파일이 아닙니다.")
+
+
+def compress_to_webp(uploaded_file) -> InMemoryUploadedFile:
+    """
+    JPEG/PNG/WebP 이미지를 WebP quality=75로 압축하여 반환.
+    GIF는 변환하지 않고 원본 반환.
+    """
+    if uploaded_file.content_type == "image/gif":
+        return uploaded_file
+
+    uploaded_file.seek(0) # 파일 포인터 초기화
+    image = Image.open(uploaded_file) # 이미지 메모리 로드
+
+    image = ImageOps.exif_transpose(image) # EXIF 회전 보정
+
+    output = io.BytesIO() # 메모리 버퍼에 작성
+    image.save(output, format="WEBP", quality=75) # webp/q:75로 압축
+    output.seek(0) # 파일 포인터 초기화
+
+    original_name = os.path.splitext(uploaded_file.name)[0]
+    new_name = f"{original_name}.webp"
+
+    return InMemoryUploadedFile(
+        file=output,
+        field_name=None,
+        name=new_name,
+        content_type="image/webp",
+        size=output.getbuffer().nbytes,
+        charset=None,
+    )

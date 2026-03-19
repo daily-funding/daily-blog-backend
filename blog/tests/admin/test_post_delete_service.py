@@ -8,6 +8,8 @@ from django.utils import timezone
 from blog.models import PostImage
 from blog.services.post_delete_service import delete_post, delete_post_preview_image
 
+pytestmark = pytest.mark.usefixtures("aws_mock")
+
 
 @pytest.mark.django_db
 def test_delete_post_marks_post_images_for_cleanup(post, post_image_factory):
