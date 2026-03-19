@@ -1,62 +1,132 @@
-{% extends "blog/admin/base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="ko">
 
-{% block title %}게시물 상세보기{% endblock %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>게시물 상세보기</title>
+  <link rel="stylesheet" href="{% static 'css/blog_post_content.css' %}">
+  <link rel="stylesheet" href="{% static 'css/admin_post_create.css' %}">
+  <style>
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(5, 48, 157, 0.08), transparent 30%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+    }
 
-{% block content %}
-<div class="layout">
-    <h1>{{ post.title }}</h1>
+    .post-detail-page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 24px 72px;
+    }
 
-    <h3>{{ post.subtitle }}</h3>
+    .post-detail-actions {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-    <p>{{ post.description }}</p>
+    .post-detail-btn {
+      text-decoration: none;
+    }
 
-    <p>
-        카테고리:
-        {% if post.category %}
-        {{ post.category.name }}
-        {% else %}
-        -
-        {% endif %}
-    </p>
+    .post-detail-inline-form {
+      margin: 0;
+    }
 
-    <p>작성자: {{ post.author }}</p>
-    <p>작성일: {{ post.created_at|date:"Y-m-d H:i" }}</p>
+    .post-detail-shell {
+      max-width: 968px;
+      margin: 0 auto;
+    }
 
-    <hr>
+    .post-detail-body {
+      max-width: 878px;
+      margin: 0 auto;
+      padding: 67px 43px 123px;
+      background: #ffffff;
+    }
 
-    <h2>썸네일</h2>
+    .post-detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+      color: #4b5563;
+      font-size: 14px;
+    }
 
-    {% if post.preview_image %}
-    <img src="{{ post.preview_image.url }}" width="300" alt="썸네일">
-    {% else %}
-    <p class="text-muted">등록된 썸네일이 없습니다.</p>
-    {% endif %}
+    @media (max-width: 768px) {
+      .post-detail-page {
+        padding: 20px 16px 48px;
+      }
 
-    <hr>
+      .post-detail-body {
+        max-width: 682px;
+        padding: 61px 26px 65px;
+      }
+    }
+  </style>
+</head>
 
-    <h2>본문</h2>
-
-    <div class="content-box">
-        {{ sanitized_content|safe }}
+<body>
+  <main class="post-detail-page">
+    <div class="post-detail-actions">
+      <a href="{% url 'blog:admin-post-list' %}{% if query_string %}?{{ query_string }}{% endif %}"
+        class="back-btn post-detail-btn">
+        목록으로
+      </a>
+      <form method="post" action="{% url 'blog:admin-post-delete' post.id %}" class="post-detail-inline-form">
+        {% csrf_token %}
+        <button type="submit" class="submit-btn post-detail-btn">삭제</button>
+      </form>
     </div>
 
-    <hr>
+    <div class="preview-shell preview-desktop post-detail-shell">
+      <article class="dailyblog_post_preview">
+        <header class="preview-post-header">
+          {% if post.preview_image %}
+          <div class="preview-hero"
+            style="background-image: url('{{ post.preview_image.url }}'); background-color: transparent;">
+            {% else %}
+            <div class="preview-hero">
+              {% endif %}
+              <div class="preview-hero-dim"></div>
 
-    <div class="action-group">
-        <a
-            href="{% url 'blog:admin-post-list' %}{% if query_string %}?{{ query_string }}{% endif %}"
-            class="btn btn-outline"
-        >
-            목록으로
-        </a>
-        <form method="post" action="{% url 'blog:admin-post-delete' post.id %}" class="inline-form">
-            {% csrf_token %}
-            <button type="submit" class="btn">삭제</button>
-        </form>
+              <div class="preview-hero-top-icons">
+                <img src="{% static 'images/arrowbtn.png' %}" alt="뒤로가기" class="preview-hero-back">
+                <img src="{% static 'images/closebtn.png' %}" alt="닫기" class="preview-hero-close">
+              </div>
+
+              <div class="post_head_cover">
+                <div class="center_div">
+                  <p class="category_badge">
+                    {% if post.category %}{{ post.category.name }}{% else %}카테고리{% endif %}
+                  </p>
+                  <h1 class="title">{{ post.title }}</h1>
+                  <p class="subtitle">{{ post.subtitle }}</p>
+                </div>
+
+                <div class="bottom_div">
+                  <img src="{% static 'images/dailyfundinglogo.png' %}" alt="데일리펀딩" class="preview-dailyfunding-logo">
+                </div>
+              </div>
+            </div>
+        </header>
+
+        <section class="preview-article-body post-detail-body">
+          <div class="post-detail-meta">
+            <div>작성자: {{ post.author }}</div>
+            <div>작성일: {{ post.created_at }}</div>
+          </div>
+          <div class="blog-post-content">
+            {{ sanitized_content|safe }}
+          </div>
+        </section>
+      </article>
     </div>
-</div>
-{% endblock %}
+  </main>
+</body>
 
-{% block extra_script %}
-{% endblock %}
+</html>

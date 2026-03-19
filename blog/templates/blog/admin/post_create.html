@@ -1,169 +1,167 @@
 {% extends "blog/admin/base.html" %}
 {% load static %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>게시물 작성</title>
-  {{ form.media }}
-  <link rel="stylesheet" href="{% static 'css/blog_post_content.css' %}">
-  <link rel="stylesheet" href="{% static 'css/admin_post_create.css' %}">
-</head>
+{% block title %}게시물 작성{% endblock %}
 
-<body>
-  <div class="editor-page">
-    <form method="post" enctype="multipart/form-data" class="editor-form">
-      {% csrf_token %}
+{% block extra_head %}
+{{ form.media }}
+<link rel="stylesheet" href="{% static 'css/blog_post_content.css' %}">
+<link rel="stylesheet" href="{% static 'css/admin_post_create.css' %}">
+{% endblock %}
 
-      <section class="editor-panel">
-        <div class="editor-top">
-          <button type="button" class="back-btn" onclick="location.href='{% url 'blog:admin-post-list' %}'">
-            목록으로
-          </button>
+{% block content %}
+<div class="editor-page">
+  <form method="post" enctype="multipart/form-data" class="editor-form">
+    {% csrf_token %}
+
+    <section class="editor-panel">
+      <div class="editor-top">
+        <button type="button" class="back-btn" onclick="location.href='{% url 'blog:admin-post-list' %}'">
+          목록으로
+        </button>
+      </div>
+
+      <div class="editor-fields">
+        {% if form.non_field_errors %}
+        <div class="form-error-box" role="alert">
+          {% for error in form.non_field_errors %}
+          <p class="field-error">{{ error }}</p>
+          {% endfor %}
         </div>
+        {% endif %}
 
-        <div class="editor-fields">
-          {% if form.non_field_errors %}
-          <div class="form-error-box" role="alert">
-            {% for error in form.non_field_errors %}
-            <p class="field-error">{{ error }}</p>
-            {% endfor %}
-          </div>
+        <div class="field-group">
+          <label for="{{ form.title.id_for_label }}" class="field-label">제목</label>
+          {{ form.title }}
+          {% if form.title.errors %}
+          <p class="field-error">{{ form.title.errors.0 }}</p>
           {% endif %}
+        </div>
 
-          <div class="field-group">
-            <label for="{{ form.title.id_for_label }}" class="field-label">제목</label>
-            {{ form.title }}
-            {% if form.title.errors %}
-            <p class="field-error">{{ form.title.errors.0 }}</p>
+        <div class="divider-line"></div>
+
+        <div class="field-group">
+          <label for="{{ form.subtitle.id_for_label }}" class="field-label">부제목</label>
+          {{ form.subtitle }}
+          {% if form.subtitle.errors %}
+          <p class="field-error">{{ form.subtitle.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="field-group">
+          <label for="{{ form.description.id_for_label }}" class="field-label">미리보기 설명</label>
+          {{ form.description }}
+          <p class="field-counter" id="description-counter" aria-live="polite">0/150</p>
+          {% if form.description.errors %}
+          <p class="field-error">{{ form.description.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="field-row">
+          <div class="field-block">
+            <label for="{{ form.category.id_for_label }}">카테고리</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+            <p class="field-error">{{ form.category.errors.0 }}</p>
             {% endif %}
           </div>
 
-          <div class="divider-line"></div>
-
-          <div class="field-group">
-            <label for="{{ form.subtitle.id_for_label }}" class="field-label">부제목</label>
-            {{ form.subtitle }}
-            {% if form.subtitle.errors %}
-            <p class="field-error">{{ form.subtitle.errors.0 }}</p>
-            {% endif %}
-          </div>
-
-          <div class="field-group">
-            <label for="{{ form.description.id_for_label }}" class="field-label">미리보기 설명</label>
-            {{ form.description }}
-            <p class="field-counter" id="description-counter" aria-live="polite">0/150</p>
-            {% if form.description.errors %}
-            <p class="field-error">{{ form.description.errors.0 }}</p>
-            {% endif %}
-          </div>
-
-          <div class="field-row">
-            <div class="field-block">
-              <label for="{{ form.category.id_for_label }}">카테고리</label>
-              {{ form.category }}
-              {% if form.category.errors %}
-              <p class="field-error">{{ form.category.errors.0 }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field-block">
-              <label for="{{ form.preview_image.id_for_label }}">썸네일</label>
-              {{ form.preview_image }}
-              {% if form.preview_image.errors %}
-              <p class="field-error">{{ form.preview_image.errors.0 }}</p>
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="field-group content-group">
-            {{ form.content }}
-            {% if form.content.errors %}
-            <p class="field-error">{{ form.content.errors.0 }}</p>
+          <div class="field-block">
+            <label for="{{ form.preview_image.id_for_label }}">썸네일</label>
+            {{ form.preview_image }}
+            {% if form.preview_image.errors %}
+            <p class="field-error">{{ form.preview_image.errors.0 }}</p>
             {% endif %}
           </div>
         </div>
 
-        <div class="editor-bottom">
-          <button type="submit" class="submit-btn">출간하기</button>
+        <div class="field-group content-group">
+          {{ form.content }}
+          {% if form.content.errors %}
+          <p class="field-error">{{ form.content.errors.0 }}</p>
+          {% endif %}
         </div>
-      </section>
+      </div>
 
-      <section class="preview-panel">
-        <div class="preview-toolbar">
-          <button type="button" class="preview-mode-btn active" data-mode="desktop">데스크탑</button>
-          <button type="button" class="preview-mode-btn" data-mode="mobile">모바일</button>
-        </div>
+      <div class="editor-bottom">
+        <button type="submit" class="submit-btn">출간하기</button>
+      </div>
+    </section>
 
-        <div class="preview-shell preview-desktop" id="preview-shell">
-          <article class="dailyblog_post_preview">
-            <header class="preview-post-header">
-              <div class="preview-hero" id="preview-hero">
-                <div class="preview-hero-dim"></div>
+    <section class="preview-panel">
+      <div class="preview-toolbar">
+        <button type="button" class="preview-mode-btn active" data-mode="desktop">데스크탑</button>
+        <button type="button" class="preview-mode-btn" data-mode="mobile">모바일</button>
+      </div>
 
-                <div class="preview-hero-top-icons">
-                  <img src="{% static 'images/arrowbtn.png' %}" alt="" aria-hidden="true" class="preview-hero-back">
-                  <img src="{% static 'images/closebtn.png' %}" alt="" aria-hidden="true" class="preview-hero-close">
+      <div class="preview-shell preview-desktop" id="preview-shell">
+        <article class="dailyblog_post_preview">
+          <header class="preview-post-header">
+            <div class="preview-hero" id="preview-hero">
+              <div class="preview-hero-dim"></div>
+
+              <div class="preview-hero-top-icons">
+                <img src="{% static 'images/arrowbtn.png' %}" alt="" aria-hidden="true" class="preview-hero-back">
+                <img src="{% static 'images/closebtn.png' %}" alt="" aria-hidden="true" class="preview-hero-close">
+              </div>
+
+              <div class="post_head_cover">
+                <div class="center_div">
+                  <p class="category_badge" id="preview-category">카테고리</p>
+                  <h1 class="title" id="preview-title">제목을 입력하세요</h1>
+                  <p class="subtitle" id="preview-subtitle">부제목을 입력하세요</p>
                 </div>
 
-                <div class="post_head_cover">
-                  <div class="center_div">
-                    <p class="category_badge" id="preview-category">카테고리</p>
-                    <h1 class="title" id="preview-title">제목을 입력하세요</h1>
-                    <p class="subtitle" id="preview-subtitle">부제목을 입력하세요</p>
-                  </div>
-
-                  <div class="bottom_div">
-                    <img src="{% static 'images/dailyfundinglogo.png' %}" alt="데일리펀딩" class="preview-dailyfunding-logo">
-                  </div>
+                <div class="bottom_div">
+                  <img src="{% static 'images/dailyfundinglogo.png' %}" alt="데일리펀딩" class="preview-dailyfunding-logo">
                 </div>
               </div>
-            </header>
+            </div>
+          </header>
 
-            <section class="preview-article-body">
-              <div class="preview-body blog-post-content" id="preview-body">
-                <p>본문 미리보기</p>
-              </div>
-            </section>
-          </article>
-        </div>
-      </section>
-    </form>
-  </div>
+          <section class="preview-article-body">
+            <div class="preview-body blog-post-content" id="preview-body">
+              <p>본문 미리보기</p>
+            </div>
+          </section>
+        </article>
+      </div>
+    </section>
+  </form>
+</div>
+{% endblock %}
 
-  <script src="{% static 'js/admin_post_preview.js' %}"></script>
-  <script>
-    function getCookie(name) {
-      const cookies = document.cookie ? document.cookie.split(';') : [];
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.startsWith(name + '=')) {
-          return decodeURIComponent(cookie.substring(name.length + 1));
-        }
+{% block extra_script %}
+<script src="{% static 'js/admin_post_preview.js' %}"></script>
+<script>
+  function getCookie(name) {
+    const cookies = document.cookie ? document.cookie.split(';') : [];
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+        return decodeURIComponent(cookie.substring(name.length + 1));
       }
-      return null;
+    }
+    return null;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const csrfToken = getCookie("csrftoken");
+
+    if (!window.CKEDITOR) {
+      return;
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const csrfToken = getCookie("csrftoken");
+    CKEDITOR.on("instanceReady", function (event) {
+      const editor = event.editor;
 
-      if (!window.CKEDITOR) {
-        return;
-      }
-
-      CKEDITOR.on("instanceReady", function (event) {
-        const editor = event.editor;
-
-        editor.on("fileUploadRequest", function (evt) {
-          const xhr = evt.data.fileLoader.xhr;
-          if (csrfToken) {
-            xhr.setRequestHeader("X-CSRFToken", csrfToken);
-          }
-        });
+      editor.on("fileUploadRequest", function (evt) {
+        const xhr = evt.data.fileLoader.xhr;
+        if (csrfToken) {
+          xhr.setRequestHeader("X-CSRFToken", csrfToken);
+        }
       });
     });
-  </script>
-  {% endblock %}
-</body>
-
-</html>
+  });
+</script>
+{% endblock %}
