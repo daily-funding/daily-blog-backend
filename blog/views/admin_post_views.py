@@ -1,13 +1,8 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseNotAllowed
-import logging
-from functools import wraps
-
 from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
@@ -32,7 +27,11 @@ from blog.services.pin_service import (
 )
 from blog.services.post_create_service import create_post
 from blog.services.post_delete_service import delete_post
+from blog.services.post_update_service import update_post
 from blog.services.post_content_sanitize_service import sanitize_post_content
+
+import logging
+from functools import wraps
 
 POSTS_PER_PAGE = 10
 logger = logging.getLogger(__name__)
@@ -142,6 +141,37 @@ def admin_post_delete_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     delete_post(post)
     return redirect("blog:admin-post-list")
+
+
+@admin_access_required
+def admin_post_edit_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == "POST":
+        # 게시물 수정
+        form = PostCreateForm(request.POST, request.FILES, instance=post)
+
+        if form.is_valid():
+            updated_post = update_post(
+                post=post,
+                validated_data=form.cleaned_data,
+            )
+            return redirect(
+                "blog:admin-post-detail",
+                post_id=updated_post.id,
+            )
+    else:
+        # 기존 데이터 채워서 수정 폼 보여줌
+        form = PostCreateForm(instance=post)
+
+    return render(
+        request,
+        "blog/admin/post_edit.html",
+        {
+            "form": form,
+            "post": post,
+        },
+    )
 
 
 # pin 추가

@@ -1,7 +1,7 @@
 {% extends "blog/admin/base.html" %}
 {% load static %}
 
-{% block title %}게시물 작성{% endblock %}
+{% block title %}게시물 수정{% endblock %}
 {% block body_class %}editor-body{% endblock %}
 {% block main_class %}editor-main{% endblock %}
 
@@ -18,8 +18,8 @@
 
     <section class="editor-panel">
       <div class="editor-top">
-        <button type="button" class="back-btn" onclick="location.href='{% url 'blog:admin-post-list' %}'">
-          목록으로
+        <button type="button" class="back-btn" onclick="location.href='{% url 'blog:admin-post-detail' post.id %}'">
+          상세보기로
         </button>
       </div>
 
@@ -70,7 +70,23 @@
 
           <div class="field-block">
             <label for="{{ form.preview_image.id_for_label }}">썸네일</label>
-            {{ form.preview_image }}
+
+            {% if post.preview_image %}
+            <div class="current-thumbnail-box">
+              <p class="current-thumbnail-label">현재 썸네일</p>
+              <a href="{{ post.preview_image.url }}" target="_blank" rel="noopener noreferrer"
+                class="current-thumbnail-link">
+                {{ post.preview_image.name }}
+              </a>
+            </div>
+            {% endif %}
+
+            <div class="thumbnail-upload-box">
+              <p class="current-thumbnail-label">변경</p>
+              <input type="file" name="{{ form.preview_image.name }}" id="{{ form.preview_image.id_for_label }}"
+                accept="image/png,image/jpeg,image/webp,image/jpg" aria-label="썸네일 이미지">
+            </div>
+
             {% if form.preview_image.errors %}
             <p class="field-error">{{ form.preview_image.errors.0 }}</p>
             {% endif %}
@@ -86,7 +102,7 @@
       </div>
 
       <div class="editor-bottom">
-        <button type="submit" class="submit-btn">출간하기</button>
+        <button type="submit" class="submit-btn">수정 완료</button>
       </div>
     </section>
 
@@ -99,7 +115,8 @@
       <div class="preview-shell preview-desktop" id="preview-shell">
         <article class="dailyblog_post_preview">
           <header class="preview-post-header">
-            <div class="preview-hero" id="preview-hero">
+            <div class="preview-hero" id="preview-hero"
+              data-existing-image-url="{% if post.preview_image %}{{ post.preview_image.url }}{% endif %}">
               <div class="preview-hero-dim"></div>
 
               <div class="preview-hero-top-icons">
@@ -109,9 +126,9 @@
 
               <div class="post_head_cover">
                 <div class="center_div">
-                  <p class="category_badge" id="preview-category">카테고리</p>
-                  <h1 class="title" id="preview-title">제목을 입력하세요</h1>
-                  <p class="subtitle" id="preview-subtitle">부제목을 입력하세요</p>
+                  <p class="category_badge" id="preview-category">{{ post.category.name }}</p>
+                  <h1 class="title" id="preview-title">{{ post.title }}</h1>
+                  <p class="subtitle" id="preview-subtitle">{{ post.subtitle }}</p>
                 </div>
 
                 <div class="bottom_div">
@@ -123,7 +140,7 @@
 
           <section class="preview-article-body">
             <div class="preview-body blog-post-content" id="preview-body">
-              <p>본문 미리보기</p>
+              {{ post.content|safe }}
             </div>
           </section>
         </article>
