@@ -72,6 +72,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function setPreviewMode(mode) {
+    if (!previewShell) {
+      return;
+    }
     previewShell.classList.remove("preview-desktop", "preview-mobile");
     previewShell.classList.add(mode === "mobile" ? "preview-mobile" : "preview-desktop");
 

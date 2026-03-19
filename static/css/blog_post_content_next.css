@@ -87,9 +87,9 @@
 .blog-post-content figure,
 .blog-post-content .image {
   display: table;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 1.6em auto;
 }
+
 
 .blog-post-content figure img,
 .blog-post-content .image img {
@@ -211,8 +211,3 @@
   }
 }
 
-.blog-post-content figure,
-.blog-post-content .image {
-  display: table;
-  margin: 1.6em auto;
-}
