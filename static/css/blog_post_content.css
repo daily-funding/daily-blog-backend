@@ -203,8 +203,3 @@
   }
 }
 
-.blog-post-content figure,
-.blog-post-content .image {
-  display: table;
-  margin: 1.6em auto;
-}
