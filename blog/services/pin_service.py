@@ -26,8 +26,8 @@ class InvalidPinOrderError(PinError):
 
 @transaction.atomic
 def add_pin(post, max_count: int):
-    if max_count < 1:
-        raise ValueError("max_count must be greater than 0")
+    if not 1 <= max_count <= 12:
+        raise ValueError("max_count must be between 1 and 12")
 
     # Pin 테이블 전체 순서 상태를 건드리므로 관련 row lock
     pinned_qs = Pin.objects.select_for_update().order_by("sort_order")
