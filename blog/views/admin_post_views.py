@@ -32,6 +32,7 @@ from blog.services.pin_service import (
 )
 from blog.services.post_create_service import create_post
 from blog.services.post_delete_service import delete_post
+from blog.services.post_update_service import update_post
 from blog.services.post_content_sanitize_service import sanitize_post_content
 
 POSTS_PER_PAGE = 10
@@ -142,6 +143,37 @@ def admin_post_delete_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     delete_post(post)
     return redirect("blog:admin-post-list")
+
+
+@admin_access_required
+def admin_post_edit_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == "POST":
+        # 게시물 수정
+        form = PostCreateForm(request.POST, request.FILES, instance=post)
+
+        if form.is_valid():
+            updated_post = update_post(
+                post=post,
+                validated_data=form.cleaned_data,
+            )
+            return redirect(
+                "blog:admin-post-detail",
+                post_id=updated_post.id,
+            )
+    else: 
+        # 기존 데이터 채워서 수정 폼 보여줌
+        form = PostCreateForm(instance=post)
+
+    return render(
+        request,
+        "blog/admin/post_edit.html",
+        {
+            "form": form,
+            "post": post,
+        },
+    )
 
 
 # pin 추가
