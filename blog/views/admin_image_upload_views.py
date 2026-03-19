@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.http import JsonResponse, HttpResponseBadRequest
 
 from blog.models import PostImage
-from blog.services.image_upload_service import validate_uploaded_image
+from blog.services.image_upload_service import validate_uploaded_image, compress_to_webp
 
 logger = logging.getLogger(__name__)
 
@@ -28,11 +28,12 @@ def admin_image_upload_view(request):
 
     try:
         validate_uploaded_image(uploaded_file)
+        compressed_file = compress_to_webp(uploaded_file)
 
         post_image = PostImage.objects.create(
             post=None,
-            path=uploaded_file,
-            capacity=uploaded_file.size,
+            path=compressed_file,
+            capacity=compressed_file.size,
         )
 
     except ValidationError as e:
