@@ -1,8 +1,10 @@
 # 게시물 삭제 시 PostImage.post = null / updated_at 갱신 테스트
 from datetime import timedelta
 
+import boto3
 import pytest
 from django.utils import timezone
+from moto import mock_aws
 
 from blog.models import PostImage
 from blog.services.post_delete_service import delete_post

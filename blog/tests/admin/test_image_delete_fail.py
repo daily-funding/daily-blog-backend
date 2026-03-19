@@ -3,9 +3,11 @@
 from datetime import timedelta
 from unittest.mock import patch
 
+import boto3
 import pytest
 from django.core.management import call_command
 from django.utils import timezone
+from moto import mock_aws
 
 from blog.models import PostImage
 

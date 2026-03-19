@@ -39,7 +39,7 @@ def test_gif_is_not_converted():
 
 
 def test_compress_webp_to_webp():
-    uploaded = make_test_image_file("photo.webp", "WEBP", "image/webp")
+    uploaded = make_test_image_file("photo.webp", "image/webp")
     result = compress_to_webp(uploaded)
 
     assert result.name == "photo.webp"
