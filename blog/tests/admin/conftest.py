@@ -24,6 +24,7 @@ def make_test_image_file(
         ".jpg": ("JPEG", "image/jpeg"),
         ".jpeg": ("JPEG", "image/jpeg"),
         ".webp": ("WEBP", "image/webp"),
+        ".gif": ("GIF", "image/gif"),
     }
 
     if ext not in format_map:
