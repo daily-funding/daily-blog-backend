@@ -1,21 +1,11 @@
 # 생성 로직 / 이미지 연결
-import boto3
 import pytest
-from moto import mock_aws
 
 from blog.models import Post, PostImage
 from blog.services.post_create_service import create_post
 from blog.services.post_content_sanitize_service import sanitize_post_content
 
-
-@pytest.fixture(autouse=True)
-def aws_mock():
-    with mock_aws():
-        boto3.client("s3", region_name="ap-northeast-2").create_bucket(
-            Bucket="dailyfunding-images",
-            CreateBucketConfiguration={"LocationConstraint": "ap-northeast-2"},
-        )
-        yield
+pytestmark = pytest.mark.usefixtures("aws_mock")
 
 
 @pytest.mark.django_db

@@ -1,22 +1,12 @@
 # 업로드 API / 파일 검증
-import boto3
 import pytest
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
-from moto import mock_aws
 
 from blog.models import PostImage
 
-
-@pytest.fixture(autouse=True)
-def aws_mock():
-    with mock_aws():
-        boto3.client("s3", region_name="ap-northeast-2").create_bucket(
-            Bucket="dailyfunding-images",
-            CreateBucketConfiguration={"LocationConstraint": "ap-northeast-2"},
-        )
-        yield
+pytestmark = pytest.mark.usefixtures("aws_mock")
 
 
 @pytest.mark.django_db

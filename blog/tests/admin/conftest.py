@@ -1,13 +1,25 @@
 # 관리자 로직 공통 fixture
 import io
 import os
+import boto3
 import pytest
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from moto import mock_aws
 from PIL import Image
 
 from blog.models import Post, PostImage, Category
+
+
+@pytest.fixture
+def aws_mock():
+    with mock_aws():
+        boto3.client("s3", region_name="ap-northeast-2").create_bucket(
+            Bucket="dailyfunding-images",
+            CreateBucketConfiguration={"LocationConstraint": "ap-northeast-2"},
+        )
+        yield
 
 
 # 테스트용 이미지 파일 생성
