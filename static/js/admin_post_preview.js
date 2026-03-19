@@ -38,22 +38,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateHeroImagePreview() {
-    const file = previewImageInput.files[0];
+    const file = previewImageInput?.files?.[0];
+    const existingImageUrl = previewHero?.dataset?.existingImageUrl;
 
     if (currentPreviewImageUrl) {
       URL.revokeObjectURL(currentPreviewImageUrl);
       currentPreviewImageUrl = null;
     }
 
-    if (!file) {
-      previewHero.style.backgroundImage = "none";
-      previewHero.style.backgroundColor = "#8f8f8f";
+    if (file) {
+      currentPreviewImageUrl = URL.createObjectURL(file);
+      previewHero.style.backgroundImage = `url("${currentPreviewImageUrl}")`;
+      previewHero.style.backgroundColor = "transparent";
       return;
     }
 
-    currentPreviewImageUrl = URL.createObjectURL(file);
-    previewHero.style.backgroundImage = `url("${currentPreviewImageUrl}")`;
-    previewHero.style.backgroundColor = "transparent";
+    if (existingImageUrl) {
+      previewHero.style.backgroundImage = `url("${existingImageUrl}")`;
+      previewHero.style.backgroundColor = "transparent";
+      return;
+    }
+
+    previewHero.style.backgroundImage = "none";
+    previewHero.style.backgroundColor = "#8f8f8f";
   }
 
   function bindEditorPreview() {
