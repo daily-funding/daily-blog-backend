@@ -22,7 +22,9 @@
                 <a href="{% url 'blog:admin-post-list' %}" class="admin-nav-link">게시물 목록 조회</a>
                 <a href="{% url 'blog:admin-category-manage' %}" class="admin-nav-link">카테고리 관리</a>
                 <a href="{% url 'blog:admin-post-create' %}" class="admin-nav-link">게시물 작성</a>
-                <a href="https://blog.dailyfunding.cloud/" class="admin-nav-link" target="_blank" rel="noopener noreferrer">유저 페이지 이동</a>
+                <a href="{{ BLOG_FRONTEND_URL }}" class="admin-nav-link" target="_blank" rel="noopener noreferrer">
+                    유저 페이지 이동
+                </a>
                 <form action="{% url 'admin:logout' %}" method="post" class="logout-form">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn">로그아웃</button>

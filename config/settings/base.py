@@ -22,6 +22,7 @@ SECRET_KEY = get_env_or_raise("SECRET_KEY")
 
 POST_IMAGE_UPLOAD_ROOT = "images/posts/"
 POST_IMAGE_UPLOAD_URL = "/admin/blog/images/upload/"
+BLOG_FRONTEND_URL = "https://blog.dailyfunding.cloud/"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -80,6 +81,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "blog.context_processors.blog_settings",
             ],
         },
     },
@@ -170,4 +172,3 @@ DJANGO_GUID = {
     "IGNORE_URLS": [],
     "UUID_LENGTH": 8,
 }
-
