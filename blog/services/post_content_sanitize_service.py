@@ -1,8 +1,12 @@
 import nh3
 
 ALLOWED_TAGS = {
+    "div",
+    "figure",
+    "figcaption",
     "p",
     "br",
+    "span",
     "strong",
     "b",
     "em",
@@ -29,8 +33,17 @@ ALLOWED_TAGS = {
 }
 
 ALLOWED_ATTRIBUTES = {
+    "*": {"class"},
     "a": {"href", "title", "target"},
-    "img": {"src", "alt", "width", "height"},
+    "img": {"src", "alt", "width", "height", "class"},
+    "span": {"style"},
+    "p": {"style"},
+    "h1": {"style"},
+    "h2": {"style"},
+    "h3": {"style"},
+    "h4": {"style"},
+    "figure": {"class", "style"},
+    "figcaption": {"class", "style"},
 }
 
 
@@ -43,4 +56,5 @@ def sanitize_post_content(content: str) -> str:
         tags=ALLOWED_TAGS,
         attributes=ALLOWED_ATTRIBUTES,
         url_schemes={"http", "https"},
+        filter_style_properties={"background-color", "color", "text-align"},
     )

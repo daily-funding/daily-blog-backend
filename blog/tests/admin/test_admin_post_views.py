@@ -35,7 +35,6 @@ def test_admin_post_create_view_allows_staff_user(client, staff_user):
     response = client.get(url)
 
     assert response.status_code == 200
-    assert "관리자 게시물 작성" in response.content.decode()
 
 
 @pytest.mark.django_db

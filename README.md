@@ -54,3 +54,9 @@ crontab -e
 ```bash
 python manage.py collectstatic
 ```
+
+## tailwind 명령어
+```
+npx @tailwindcss/cli -i ./static/src/input.css -o ./static/css/output.css --watch
+```
+

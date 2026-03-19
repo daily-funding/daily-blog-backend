@@ -14,17 +14,38 @@ class PostCreateForm(forms.ModelForm):
     )
     title = forms.CharField(
         label="제목",
-        widget=forms.TextInput(attrs={"placeholder": "제목을 입력하세요"}),
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "제목을 입력하세요",
+                "rows": 3,
+                "maxlength": Post._meta.get_field("title").max_length,
+                "aria-label": "제목",
+            }
+        ),
         error_messages={"required": "제목은 비워둘 수 없습니다."},
     )
     subtitle = forms.CharField(
         label="부제목",
-        widget=forms.TextInput(attrs={"placeholder": "부제목을 입력하세요"}),
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "부제목을 입력하세요",
+                "rows": 3,
+                "maxlength": Post._meta.get_field("subtitle").max_length,
+                "aria-label": "부제목",
+            }
+        ),
         error_messages={"required": "부제목은 비워둘 수 없습니다."},
     )
     description = forms.CharField(
         label="미리보기 설명",
-        widget=forms.TextInput(attrs={"placeholder": "미리보기 설명을 입력하세요"}),
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "미리보기 설명을 입력하세요",
+                "rows": 4,
+                "maxlength": Post._meta.get_field("description").max_length,
+                "aria-label": "미리보기 설명",
+            }
+        ),
         error_messages={"required": "미리보기 설명은 비워둘 수 없습니다."},
     )
     content = forms.CharField(
@@ -48,7 +69,13 @@ class PostCreateForm(forms.ModelForm):
             "preview_image": "썸네일 이미지",
         }
         widgets = {
-            "category": forms.Select(),
+            "category": forms.Select(attrs={"aria-label": "카테고리"}),
+            "preview_image": forms.ClearableFileInput(
+                attrs={
+                    "accept": "image/png,image/jpeg,image/webp,image/jpg",
+                    "aria-label": "썸네일 이미지",
+                }
+            ),
         }
 
     def clean_title(self):

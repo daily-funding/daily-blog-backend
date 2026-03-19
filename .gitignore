@@ -26,3 +26,9 @@ db.sqlite3
 images/*
 logs/*
 staticfiles/
+
+.DS_Store
+
+
+# Node
+node_modules/

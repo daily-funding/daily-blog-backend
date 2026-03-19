@@ -137,7 +137,7 @@ def admin_post_detail_view(request, post_id):
 @staff_member_required
 def admin_post_delete_view(request, post_id):
     if request.method != "POST":
-        return HttpResponseNotAllowed("POST 요청만 허용됩니다.")
+        return HttpResponseNotAllowed(["POST"])
 
     post = get_object_or_404(Post, id=post_id)
     delete_post(post)

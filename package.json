@@ -1,0 +1,27 @@
+{
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.1",
+    "tailwindcss": "^4.2.1"
+  },
+  "name": "daily-blog-backend",
+  "version": "1.0.0",
+  "description": "Tailwind CSS tooling for the daily-blog-backend project",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx `@tailwindcss/cli` -i ./static/src/input.css -o ./static/css/output.css",
+    "watch:css": "npx `@tailwindcss/cli` -i ./static/src/input.css -o ./static/css/output.css --watch",
+    "test": "echo \"No JS tests configured\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daily-funding/daily-blog-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daily-funding/daily-blog-backend/issues"
+  },
+  "homepage": "https://github.com/daily-funding/daily-blog-backend#readme"
+}
