@@ -1,0 +1,242 @@
+{% extends "blog/admin/base.html" %}
+{% load static %}
+
+{% block title %}카테고리 관리{% endblock %}
+
+{% block content %}
+<div class="layout">
+    <h1>카테고리 관리</h1>
+
+    <form method="post" action="{% url 'blog:admin-category-create' %}" class="filter-box" id="category-create-form">
+        {% csrf_token %}
+        <label for="category-name-input" class="visually-hidden">카테고리 이름</label>
+        <input type="text" name="name" id="category-name-input" placeholder="카테고리 이름 입력" maxlength="20" required>
+        <button type="submit" class="btn">추가</button>
+        <a href="{% url 'blog:admin-post-list' %}" class="btn btn-outline">목록으로</a>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>게시물 수</th>
+                <th>생성일</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody id="category-table-body">
+            {% for category in categories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.post_count }}</td>
+                <td>{{ category.created_at|date:"Y-m-d" }}</td>
+                <td>
+                    <form method="post" action="{% url 'blog:admin-category-delete' category.id %}"
+                        class="inline-form category-delete-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr id="empty-category-row">
+                <td colspan="5" class="text-muted">카테고리가 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="toast-container" class="toast-container"></div>
+    {% endblock %}
+
+    {% block extra_script %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const createForm = document.getElementById("category-create-form");
+            const tableBody = document.getElementById("category-table-body");
+            const toastContainer = document.getElementById("toast-container");
+            const deleteUrlTemplate = "{% url 'blog:admin-category-delete' 0 %}";
+
+            function getCookie(name) {
+                const cookies = document.cookie ? document.cookie.split(";") : [];
+
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+
+                    if (cookie.startsWith(name + "=")) {
+                        return decodeURIComponent(cookie.substring(name.length + 1));
+                    }
+                }
+
+                return null;
+            }
+
+            function showToast(message) {
+                const toast = document.createElement("div");
+                toast.className = "toast";
+
+                const toastInner = document.createElement("div");
+                toastInner.className = "toast-inner";
+
+                const toastTitle = document.createElement("p");
+                toastTitle.className = "toast-title";
+                toastTitle.textContent = message;
+
+                const progressWrap = document.createElement("div");
+                progressWrap.className = "toast-progress-wrap";
+
+                const progressBar = document.createElement("div");
+                progressBar.className = "toast-progress";
+
+                progressWrap.appendChild(progressBar);
+                toastInner.appendChild(toastTitle);
+                toastInner.appendChild(progressWrap);
+                toast.appendChild(toastInner);
+
+                toastContainer.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+
+            function removeEmptyRow() {
+                const emptyRow = document.getElementById("empty-category-row");
+                if (emptyRow) {
+                    emptyRow.remove();
+                }
+            }
+
+            function ensureEmptyRow() {
+                const rows = tableBody.querySelectorAll("tr");
+                if (rows.length === 0) {
+                    const emptyRow = document.createElement("tr");
+                    emptyRow.id = "empty-category-row";
+
+                    const emptyCell = document.createElement("td");
+                    emptyCell.colSpan = 5;
+                    emptyCell.className = "text-muted";
+                    emptyCell.textContent = "카테고리가 없습니다.";
+
+                    emptyRow.appendChild(emptyCell);
+                    tableBody.appendChild(emptyRow);
+                }
+            }
+
+            function buildDeleteForm(categoryId) {
+                const form = document.createElement("form");
+                form.method = "post";
+                form.action = deleteUrlTemplate.replace("/0/delete/", `/${categoryId}/delete/`);
+                form.className = "inline-form category-delete-form";
+
+                const button = document.createElement("button");
+                button.type = "submit";
+                button.className = "btn btn-outline";
+                button.textContent = "삭제";
+
+                form.appendChild(button);
+                return form;
+            }
+
+            function buildCategoryRow(category) {
+                const row = document.createElement("tr");
+
+                const idCell = document.createElement("td");
+                idCell.textContent = category.id;
+
+                const nameCell = document.createElement("td");
+                nameCell.textContent = category.name;
+
+                const countCell = document.createElement("td");
+                countCell.textContent = category.post_count;
+
+                const createdAtCell = document.createElement("td");
+                createdAtCell.textContent = category.created_at;
+
+                const actionCell = document.createElement("td");
+                actionCell.appendChild(buildDeleteForm(category.id));
+
+                row.appendChild(idCell);
+                row.appendChild(nameCell);
+                row.appendChild(countCell);
+                row.appendChild(createdAtCell);
+                row.appendChild(actionCell);
+
+                return row;
+            }
+
+            if (createForm) {
+                createForm.addEventListener("submit", async function (event) {
+                    event.preventDefault();
+
+                    const csrfToken = getCookie("csrftoken");
+                    const formData = new FormData(createForm);
+
+                    try {
+                        const response = await fetch(createForm.action, {
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": csrfToken,
+                                "X-Requested-With": "XMLHttpRequest",
+                            },
+                            body: formData,
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.message || "카테고리 추가 중 오류가 발생했습니다.");
+                        }
+
+                        removeEmptyRow();
+
+                        tableBody.appendChild(buildCategoryRow(data.category));
+                        createForm.reset();
+                        showToast(data.message || "카테고리가 추가되었습니다.");
+                    } catch (error) {
+                        showToast(error.message || "카테고리 추가 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+
+            document.addEventListener("submit", async function (event) {
+                const form = event.target.closest(".category-delete-form");
+                if (!form) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const csrfToken = getCookie("csrftoken");
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": csrfToken,
+                            "X-Requested-With": "XMLHttpRequest",
+                        },
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || "카테고리 삭제 중 오류가 발생했습니다.");
+                    }
+
+                    const row = form.closest("tr");
+                    if (row) {
+                        row.remove();
+                    }
+
+                    ensureEmptyRow();
+                    showToast(data.message || "카테고리가 삭제되었습니다.");
+                } catch (error) {
+                    showToast(error.message || "카테고리 삭제 중 오류가 발생했습니다.");
+                }
+            });
+        });
+    </script>
+    {% endblock %}

@@ -1,0 +1,635 @@
+{% extends "blog/admin/base.html" %}
+{% load static %}
+
+{% block title %}게시물 관리{% endblock %}
+
+{% block content %}
+<div class="layout">
+    <h1>매일 금융 <span class="highlight">ON</span><br>금융의 각을 넓히다</h1>
+
+    <div class="top-bar">
+        <div class="action-group">
+            <a href="{% url 'blog:admin-post-create' %}" class="btn">+ 게시물 작성</a>
+            <a href="{% url 'blog:admin-category-manage' %}" class="btn btn-outline">카테고리 관리</a>
+        </div>
+    </div>
+
+    <div class="pin-section">
+        <div class="pin-section-inner">
+            <h2>고정 게시물 관리</h2>
+
+            {% if pinned_posts %}
+            <form method="post" action="{% url 'blog:admin-pin-reorder' %}" id="pin-reorder-form">
+                {% csrf_token %}
+
+                <ul class="pin-list" id="pin-list">
+                    {% for pin in pinned_posts %}
+                    <li class="pin-item" data-post-id="{{ pin.post.id }}" draggable="true">
+                        <div class="pin-item-left">
+                            <a
+                                href="{% url 'blog:admin-post-detail' pin.post.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}"
+                                class="post-title-link post-preview-trigger"
+                                {% if pin.post.preview_image %}data-preview-url="{{ pin.post.preview_image.url }}"{% endif %}
+                            >
+                                {{ pin.post.title }}
+                            </a>
+                        </div>
+
+                        <div class="pin-item-right">
+                            <div class="pin-order-btns">
+                                <button type="button" class="icon-btn move-up" aria-label="위로 이동">
+                                    <img src="{% static 'blog/image/upicon.svg' %}" alt="">
+                                </button>
+                                <button type="button" class="icon-btn move-down" aria-label="아래로 이동">
+                                    <img src="{% static 'blog/image/downicon.svg' %}" alt="">
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline pin-remove-btn"
+                                data-remove-url="{% url 'blog:admin-pin-remove' pin.post.id %}"
+                            >
+                                해제
+                            </button>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <div id="pin-hidden-inputs"></div>
+                <button type="submit" class="btn">고정 순서 저장</button>
+            </form>
+            {% else %}
+            <p class="text-muted">고정된 게시물이 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2 id="post-list-section">게시물 목록</h2>
+    <div class="post-list">
+        <form method="get" class="filter-box" id="post-search-form">
+            <input type="text" name="search" placeholder="검색" value="{{ search }}">
+
+            <select name="category">
+                <option value="">전체 카테고리</option>
+                {% for c in categories %}
+                <option value="{{ c.id }}" {% if category_id == c.id|stringformat:"s" %}selected{% endif %}>
+                    {{ c.name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <select name="is_pinned">
+                <option value="">전체</option>
+                <option value="true" {% if is_pinned == "true" %}selected{% endif %}>고정</option>
+                <option value="false" {% if is_pinned == "false" %}selected{% endif %}>일반</option>
+            </select>
+
+            <select name="ordering">
+                <option value="latest" {% if ordering == "latest" %}selected{% endif %}>최신순</option>
+                <option value="updated" {% if ordering == "updated" %}selected{% endif %}>수정일순</option>
+                <option value="pinned" {% if ordering == "pinned" %}selected{% endif %}>고정순</option>
+                <option value="title" {% if ordering == "title" %}selected{% endif %}>제목순</option>
+            </select>
+
+            <button type="submit" class="btn">검색</button>
+        </form>
+
+        <table id="post-list-table">
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>카테고리</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>고정 여부</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in page_obj %}
+                <tr>
+                    <td>
+                        <a
+                            href="{% url 'blog:admin-post-detail' post.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}"
+                            class="post-title-link post-preview-trigger"
+                            {% if post.preview_image %}data-preview-url="{{ post.preview_image.url }}"{% endif %}
+                        >
+                            {{ post.title }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if post.category %}
+                        {{ post.category.name }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>{{ post.author }}</td>
+                    <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        {% if post.pin %}
+                        <button
+                            type="button"
+                            class="pin-toggle-btn"
+                            data-action-url="{% url 'blog:admin-pin-remove' post.id %}"
+                            data-action-type="remove"
+                            title="고정 해제"
+                            aria-label="고정 해제"
+                        >
+                            <img src="{% static 'blog/image/checkicon.png' %}" class="pin-icon" alt="고정됨">
+                        </button>
+                        {% else %}
+                        <button
+                            type="button"
+                            class="pin-toggle-btn"
+                            data-action-url="{% url 'blog:admin-pin-add' post.id %}"
+                            data-action-type="add"
+                            title="고정하기"
+                            aria-label="고정하기"
+                        >
+                            <img src="{% static 'blog/image/minusicon.png' %}" class="pin-icon" alt="고정 안됨">
+                        </button>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a
+                            href="{% url 'blog:admin-post-detail' post.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}"
+                            class="btn btn-outline"
+                        >
+                            상세
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-muted">게시물이 없습니다.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+            <a
+                class="page-btn page-arrow"
+                href="?search={{ search }}&category={{ category_id }}&is_pinned={{ is_pinned }}&ordering={{ ordering }}&page={{ page_obj.previous_page_number }}#post-list-section"
+            >
+                <img src="{% static 'blog/image/previewicon.svg' %}" alt="이전">
+            </a>
+            {% else %}
+            <span class="page-btn page-arrow disabled">
+                <img src="{% static 'blog/image/previewicon.svg' %}" alt="이전">
+            </span>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                    {% if num == page_obj.number %}
+                    <span class="page-btn active">{{ num }}</span>
+                    {% else %}
+                    <a
+                        class="page-btn"
+                        href="?search={{ search }}&category={{ category_id }}&is_pinned={{ is_pinned }}&ordering={{ ordering }}&page={{ num }}#post-list-section"
+                    >
+                        {{ num }}
+                    </a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <a
+                class="page-btn page-arrow"
+                href="?search={{ search }}&category={{ category_id }}&is_pinned={{ is_pinned }}&ordering={{ ordering }}&page={{ page_obj.next_page_number }}#post-list-section"
+            >
+                <img src="{% static 'blog/image/nexticon.svg' %}" alt="다음">
+            </a>
+            {% else %}
+            <span class="page-btn page-arrow disabled">
+                <img src="{% static 'blog/image/nexticon.svg' %}" alt="다음">
+            </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="thumbnail-preview" class="thumbnail-preview" hidden>
+        <img id="thumbnail-preview-image" src="" alt="썸네일 미리보기">
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const pinList = document.getElementById("pin-list");
+        const reorderForm = document.getElementById("pin-reorder-form");
+        const hiddenInputs = document.getElementById("pin-hidden-inputs");
+        const toastContainer = document.getElementById("toast-container");
+        const previewBox = document.getElementById("thumbnail-preview");
+        const previewImage = document.getElementById("thumbnail-preview-image");
+        const searchForm = document.getElementById("post-search-form");
+        const SCROLL_STORAGE_KEY = "admin_post_list_scroll_y";
+        const TOAST_STORAGE_KEY = "admin_post_list_toast_message";
+
+        let previewTimeout = null;
+
+        function getCookie(name) {
+            const cookies = document.cookie ? document.cookie.split(";") : [];
+
+            for (let index = 0; index < cookies.length; index += 1) {
+                const cookie = cookies[index].trim();
+
+                if (cookie.startsWith(name + "=")) {
+                    return decodeURIComponent(cookie.substring(name.length + 1));
+                }
+            }
+
+            return null;
+        }
+
+        function showToast(message) {
+            if (!toastContainer) {
+                return;
+            }
+
+            const toast = document.createElement("div");
+            toast.className = "toast";
+
+            const toastInner = document.createElement("div");
+            toastInner.className = "toast-inner";
+
+            const toastTitle = document.createElement("p");
+            toastTitle.className = "toast-title";
+            toastTitle.textContent = message;
+
+            const progressWrap = document.createElement("div");
+            progressWrap.className = "toast-progress-wrap";
+
+            const progressBar = document.createElement("div");
+            progressBar.className = "toast-progress";
+
+            progressWrap.appendChild(progressBar);
+            toastInner.appendChild(toastTitle);
+            toastInner.appendChild(progressWrap);
+            toast.appendChild(toastInner);
+            toastContainer.appendChild(toast);
+
+            window.setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function reloadWithToast(message) {
+            sessionStorage.setItem(SCROLL_STORAGE_KEY, String(window.scrollY));
+            sessionStorage.setItem(TOAST_STORAGE_KEY, message);
+            window.location.reload();
+        }
+
+        function refreshHiddenInputs() {
+            if (!pinList || !hiddenInputs) {
+                return;
+            }
+
+            hiddenInputs.innerHTML = "";
+
+            pinList.querySelectorAll(".pin-item").forEach((item) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "post_ids";
+                input.value = item.dataset.postId;
+                hiddenInputs.appendChild(input);
+            });
+        }
+
+        function createPinToggleButton(actionUrl, actionType) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "pin-toggle-btn";
+            button.dataset.actionUrl = actionUrl;
+            button.dataset.actionType = actionType;
+
+            const image = document.createElement("img");
+            image.className = "pin-icon";
+
+            if (actionType === "remove") {
+                button.title = "고정 해제";
+                button.setAttribute("aria-label", "고정 해제");
+                image.src = "{% static 'blog/image/checkicon.png' %}";
+                image.alt = "고정됨";
+            } else {
+                button.title = "고정하기";
+                button.setAttribute("aria-label", "고정하기");
+                image.src = "{% static 'blog/image/minusicon.png' %}";
+                image.alt = "고정 안됨";
+            }
+
+            button.appendChild(image);
+            return button;
+        }
+
+        function updatePostRowPinToggleUI(button, actionType) {
+            const row = button.closest("tr");
+            if (!row) {
+                return;
+            }
+
+            const pinCell = row.children[4];
+            if (!pinCell) {
+                return;
+            }
+
+            pinCell.innerHTML = "";
+
+            if (actionType === "add") {
+                pinCell.appendChild(
+                    createPinToggleButton(
+                        button.dataset.actionUrl.replace("/add/", "/remove/"),
+                        "remove"
+                    )
+                );
+                return;
+            }
+
+            if (actionType === "remove") {
+                pinCell.appendChild(
+                    createPinToggleButton(
+                        button.dataset.actionUrl.replace("/remove/", "/add/"),
+                        "add"
+                    )
+                );
+            }
+        }
+
+        function showThumbnailPreview(url, x, y) {
+            if (!previewBox || !previewImage || !url) {
+                return;
+            }
+
+            previewImage.src = url;
+            previewBox.hidden = false;
+            moveThumbnailPreview(x, y);
+        }
+
+        function moveThumbnailPreview(x, y) {
+            if (!previewBox || previewBox.hidden) {
+                return;
+            }
+
+            const offsetX = 18;
+            const offsetY = 18;
+            const previewWidth = 260;
+            const previewHeight = 180;
+
+            let left = x + offsetX;
+            let top = y + offsetY;
+
+            if (left + previewWidth > window.innerWidth - 16) {
+                left = x - previewWidth - 16;
+            }
+
+            if (top + previewHeight > window.innerHeight - 16) {
+                top = window.innerHeight - previewHeight - 16;
+            }
+
+            previewBox.style.left = left + "px";
+            previewBox.style.top = top + "px";
+        }
+
+        function hideThumbnailPreview() {
+            if (!previewBox || !previewImage) {
+                return;
+            }
+
+            previewBox.hidden = true;
+            previewImage.src = "";
+        }
+
+        if (searchForm) {
+            searchForm.addEventListener("submit", function () {
+                sessionStorage.setItem(SCROLL_STORAGE_KEY, String(window.scrollY));
+            });
+        }
+
+        window.addEventListener("load", function () {
+            const savedScrollY = sessionStorage.getItem(SCROLL_STORAGE_KEY);
+            if (savedScrollY !== null) {
+                window.scrollTo(0, Number(savedScrollY));
+                sessionStorage.removeItem(SCROLL_STORAGE_KEY);
+            }
+
+            const savedToastMessage = sessionStorage.getItem(TOAST_STORAGE_KEY);
+            if (savedToastMessage) {
+                showToast(savedToastMessage);
+                sessionStorage.removeItem(TOAST_STORAGE_KEY);
+            }
+        });
+
+        document.addEventListener("mouseover", function (event) {
+            const link = event.target.closest(".post-preview-trigger");
+            if (!link || !link.dataset.previewUrl) {
+                return;
+            }
+
+            window.clearTimeout(previewTimeout);
+            previewTimeout = window.setTimeout(() => {
+                showThumbnailPreview(link.dataset.previewUrl, event.clientX, event.clientY);
+            }, 120);
+        });
+
+        document.addEventListener("mousemove", function (event) {
+            const link = event.target.closest(".post-preview-trigger");
+            if (!link) {
+                return;
+            }
+
+            moveThumbnailPreview(event.clientX, event.clientY);
+        });
+
+        document.addEventListener("mouseout", function (event) {
+            const link = event.target.closest(".post-preview-trigger");
+            if (!link) {
+                return;
+            }
+
+            window.clearTimeout(previewTimeout);
+            hideThumbnailPreview();
+        });
+
+        if (pinList) {
+            let draggedItem = null;
+
+            pinList.addEventListener("click", async function (event) {
+                const item = event.target.closest(".pin-item");
+                if (!item) {
+                    return;
+                }
+
+                const moveUpButton = event.target.closest(".move-up");
+                if (moveUpButton) {
+                    event.preventDefault();
+                    const previousItem = item.previousElementSibling;
+                    if (previousItem) {
+                        pinList.insertBefore(item, previousItem);
+                        refreshHiddenInputs();
+                    }
+                    return;
+                }
+
+                const moveDownButton = event.target.closest(".move-down");
+                if (moveDownButton) {
+                    event.preventDefault();
+                    const nextItem = item.nextElementSibling;
+                    if (nextItem) {
+                        pinList.insertBefore(nextItem, item);
+                        refreshHiddenInputs();
+                    }
+                    return;
+                }
+
+                const removeButton = event.target.closest(".pin-remove-btn");
+                if (!removeButton) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                try {
+                    const response = await fetch(removeButton.dataset.removeUrl, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken"),
+                            "X-Requested-With": "XMLHttpRequest"
+                        }
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || "고정 해제 중 오류가 발생했습니다.");
+                    }
+
+                    item.remove();
+                    refreshHiddenInputs();
+                    showToast(data.message || "고정이 해제되었습니다.");
+                } catch (error) {
+                    showToast(error.message || "고정 해제 중 오류가 발생했습니다.");
+                }
+            });
+
+            pinList.addEventListener("dragstart", function (event) {
+                const item = event.target.closest(".pin-item");
+                if (!item) {
+                    return;
+                }
+
+                draggedItem = item;
+                item.classList.add("dragging");
+            });
+
+            pinList.addEventListener("dragend", function (event) {
+                const item = event.target.closest(".pin-item");
+                if (!item) {
+                    return;
+                }
+
+                item.classList.remove("dragging");
+                draggedItem = null;
+                refreshHiddenInputs();
+            });
+
+            pinList.addEventListener("dragover", function (event) {
+                event.preventDefault();
+
+                if (!draggedItem) {
+                    return;
+                }
+
+                const afterElement = getDragAfterElement(pinList, event.clientY);
+                if (afterElement === null) {
+                    pinList.appendChild(draggedItem);
+                } else {
+                    pinList.insertBefore(draggedItem, afterElement);
+                }
+            });
+
+            function getDragAfterElement(container, y) {
+                const draggableElements = [
+                    ...container.querySelectorAll(".pin-item:not(.dragging)")
+                ];
+
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - (box.height / 2);
+
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    }
+
+                    return closest;
+                }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+            }
+
+            refreshHiddenInputs();
+        }
+
+        if (reorderForm) {
+            reorderForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                refreshHiddenInputs();
+
+                try {
+                    const response = await fetch(reorderForm.action, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken"),
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: new FormData(reorderForm)
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || "고정 순서 저장 중 오류가 발생했습니다.");
+                    }
+
+                    showToast(data.message || "고정 순서가 저장되었습니다.");
+                } catch (error) {
+                    showToast(error.message || "고정 순서 저장 중 오류가 발생했습니다.");
+                }
+            });
+        }
+
+        document.addEventListener("click", async function (event) {
+            const button = event.target.closest(".pin-toggle-btn");
+            if (!button) {
+                return;
+            }
+
+            event.preventDefault();
+
+            try {
+                const response = await fetch(button.dataset.actionUrl, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || "처리 중 오류가 발생했습니다.");
+                }
+
+                updatePostRowPinToggleUI(button, button.dataset.actionType);
+                reloadWithToast(data.message || "처리되었습니다.");
+            } catch (error) {
+                showToast(error.message || "처리 중 오류가 발생했습니다.");
+            }
+        });
+    });
+</script>
+{% endblock %}

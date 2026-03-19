@@ -15,7 +15,7 @@ def post_image_upload_to(instance, filename):  # s3의 images/posts/에 업로�
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -24,7 +24,7 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    category = models.ForeignKey(Category, on_delete=SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=50)
@@ -44,7 +44,10 @@ class PostImage(models.Model):
 
 
 class Pin(models.Model):
-    post = models.ForeignKey(Post, on_delete=CASCADE)
+    post = models.OneToOneField(Post, on_delete=CASCADE)
     sort_order = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["sort_order"]

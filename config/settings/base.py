@@ -16,10 +16,13 @@ def get_env_or_raise(key: str) -> str:
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+LOGOUT_REDIRECT_URL = "admin:login"
+
 SECRET_KEY = get_env_or_raise("SECRET_KEY")
 
 POST_IMAGE_UPLOAD_ROOT = "images/posts/"
 POST_IMAGE_UPLOAD_URL = "/admin/blog/images/upload/"
+BLOG_FRONTEND_URL = "https://blog.dailyfunding.cloud/"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -63,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "config.middlewares.admin_access_middleware.AdminAccessMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -70,13 +74,14 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "blog.context_processors.blog_settings",
             ],
         },
     },
@@ -155,16 +160,15 @@ LOGGING = {
             "format": "[{levelname}] [{correlation_id}] {asctime} {name}: {message}",
             "style": "{",
         },
-    }
+    },
 }
 
 DJANGO_GUID = {
-    'GUID_HEADER_NAME': 'Correlation-ID',
-    'VALIDATE_GUID': False,
-    'RETURN_HEADER': True,
-    'EXPOSE_HEADER': True,
-    'INTEGRATIONS': [],
-    'IGNORE_URLS': [],
-    'UUID_LENGTH': 8,
+    "GUID_HEADER_NAME": "Correlation-ID",
+    "VALIDATE_GUID": False,
+    "RETURN_HEADER": True,
+    "EXPOSE_HEADER": True,
+    "INTEGRATIONS": [],
+    "IGNORE_URLS": [],
+    "UUID_LENGTH": 8,
 }
-

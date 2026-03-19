@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>페이지를 찾을 수 없습니다</title>
+    <link rel="stylesheet" href="{% static 'blog/css/admin_common.css' %}">
+    <link rel="icon" href="{% static 'blog/favicon.ico' %}" type="image/x-icon">
+</head>
+
+<body>
+
+    <div style="text-align:center; padding-top:120px;">
+        <img src="{% static 'blog/image/404.jpeg' %}" alt="404" style="width:660px; margin-bottom:30px;">
+
+        <h1>페이지를 찾을 수 없습니다</h1>
+        <p class="text-muted">요청하신 페이지가 존재하지 않습니다.</p>
+
+        <a href="/" class="btn">홈으로 돌아가기</a>
+    </div>
+
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 import logging
-from datetime import timedelta
+
 from django.db import transaction
+
 from blog.models import Post, PostImage
 
 logger = logging.getLogger(__name__)
@@ -22,7 +23,6 @@ def delete_post_preview_image(post: Post) -> None:
 
     file_name = post.preview_image.name
     storage = post.preview_image.storage
-    path = post.preview_image.path
 
     try:
         storage.delete(file_name)
@@ -32,7 +32,6 @@ def delete_post_preview_image(post: Post) -> None:
             extra={
                 "post_id": post.id,
                 "file_name": file_name,
-                "path": path,
             },
         )
 

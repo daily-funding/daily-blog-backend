@@ -1,24 +1,23 @@
-<!DOCTYPE html>
-<html lang="ko">
+{% extends "blog/admin/base.html" %}
+{% load static %}
 
-<head>
-  <meta charset="UTF-8">
-  <title>게시물 작성</title>
-  {{ form.media }}
-</head>
+{% block title %}관리자 게시물 작성{% endblock %}
 
-<body>
-
+{% block content %}
+<div class="layout">
   <h1>관리자 게시물 작성</h1>
 
-  <form method="post" enctype="multipart/form-data">
+  <form method="post" enctype="multipart/form-data" style="max-width: 700px;">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">등록</button>
+    <button type="submit" class="btn">등록</button>
+    <a href="{% url 'blog:admin-post-list' %}" class="btn btn-outline">목록으로</a>
   </form>
+</div>
+{% endblock %}
 
+{% block extra_script %}
   <script>
-    // Django CSRF 토큰 가져오는 함수
     function getCookie(name) {
       const cookies = document.cookie ? document.cookie.split(';') : [];
 
@@ -33,30 +32,20 @@
       return null;
     }
 
-    // CKEditor 이미지 업로드 요청에 CSRF 헤더 추가
     document.addEventListener("DOMContentLoaded", function () {
-
       const csrfToken = getCookie("csrftoken");
 
       CKEDITOR.on("instanceReady", function (event) {
-
         const editor = event.editor;
 
         editor.on("fileUploadRequest", function (evt) {
-
           const xhr = evt.data.fileLoader.xhr;
 
           if (csrfToken) {
             xhr.setRequestHeader("X-CSRFToken", csrfToken);
           }
-
         });
-
       });
-
     });
   </script>
-
-</body>
-
-</html>
+{% endblock %}

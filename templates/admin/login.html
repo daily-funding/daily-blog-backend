@@ -1,0 +1,48 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>관리자 로그인</title>
+    <link rel="stylesheet" href="{% static 'blog/css/admin_login.css' %}">
+    <link rel="icon" href="{% static 'blog/favicon.ico' %}" type="image/x-icon">
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-logo-box">
+                <img src="{% static 'blog/image/dailylogo.png' %}" alt="Dailyfunding 로고" class="login-logo">
+            </div>
+
+            {% if form.errors %}
+            <div class="login-error">
+                아이디 또는 비밀번호를 다시 확인해주세요.
+            </div>
+            {% endif %}
+
+            <form action="{{ app_path }}" method="post" id="login-form">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <input type="text" name="username" id="id_username" class="login-input" placeholder="아이디" autofocus
+                        autocomplete="username" required>
+                </div>
+
+                <div class="form-row">
+                    <input type="password" name="password" id="id_password" class="login-input" placeholder="비밀번호"
+                        autocomplete="current-password" required>
+                    <input type="hidden" name="next" value="{{ next }}">
+                </div>
+
+                <div class="form-row">
+                    <button type="submit" class="login-btn">로그인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

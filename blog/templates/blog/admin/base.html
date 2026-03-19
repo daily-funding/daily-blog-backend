@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}데일리펀딩 블로그 관리자{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/admin.css' %}">
+    <link rel="icon" href="{% static 'blog/favicon.ico' %}" type="image/x-icon">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <a href="{% url 'blog:admin-post-list' %}" class="admin-logo-link">
+                <img src="{% static 'blog/image/dailylogo.png' %}" alt="데일리펀딩 로고" class="admin-logo">
+            </a>
+
+            <nav class="admin-nav">
+                <a href="{% url 'blog:admin-post-list' %}" class="admin-nav-link">게시물 목록 조회</a>
+                <a href="{% url 'blog:admin-category-manage' %}" class="admin-nav-link">카테고리 관리</a>
+                <a href="{% url 'blog:admin-post-create' %}" class="admin-nav-link">게시물 작성</a>
+                <a href="{{ BLOG_FRONTEND_URL }}" class="admin-nav-link" target="_blank" rel="noopener noreferrer">
+                    유저 페이지 이동
+                </a>
+                <form action="{% url 'admin:logout' %}" method="post" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">로그아웃</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        {% if messages %}
+        <ul class="message-list" aria-live="polite">
+            {% for message in messages %}
+            <li class="message-item message-{{ message.tags|default:'info' }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_script %}{% endblock %}
+</body>
+
+</html>
