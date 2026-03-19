@@ -99,6 +99,7 @@
   margin: 0 auto;
 }
 
+
 .blog-post-content figure figcaption,
 .blog-post-content .image > figcaption {
   display: table-caption;
@@ -208,4 +209,10 @@
   .blog-post-content hr {
     background-size: contain;
   }
+}
+
+.blog-post-content figure,
+.blog-post-content .image {
+  display: table;
+  margin: 1.6em auto;
 }
