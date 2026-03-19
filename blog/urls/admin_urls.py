@@ -4,6 +4,7 @@ from blog.views.admin_post_views import (
     admin_post_list_view,
     admin_post_detail_view,
     admin_post_delete_view,
+    admin_post_edit_view,
     admin_pin_add_view,
     admin_pin_remove_view,
     admin_pin_reorder_view,
@@ -21,6 +22,16 @@ urlpatterns = [
     path("", admin_post_list_view, name="admin-post-list"),
     path("posts/create/", admin_post_create_view, name="admin-post-create"),
     path("posts/<int:post_id>/", admin_post_detail_view, name="admin-post-detail"),
+    path(
+        "posts/<int:post_id>/delete/",
+        admin_post_delete_view,
+        name="admin-post-delete",
+    ),
+    path(
+        "posts/<int:post_id>/edit/",
+        admin_post_edit_view,
+        name="admin-post-edit",
+    ),
     path("pins/add/<int:post_id>/", admin_pin_add_view, name="admin-pin-add"),
     path("pins/remove/<int:post_id>/", admin_pin_remove_view, name="admin-pin-remove"),
     path("pins/reorder/", admin_pin_reorder_view, name="admin-pin-reorder"),
@@ -32,11 +43,6 @@ urlpatterns = [
         "categories/<int:category_id>/delete/",
         admin_category_delete_view,
         name="admin-category-delete",
-    ),
-    path(
-        "posts/<int:post_id>/delete/",
-        admin_post_delete_view,
-        name="admin-post-delete",
     ),
     path("images/upload/", admin_image_upload_view, name="admin-image-upload"),
 ]
