@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 from blog.models import Category, Post
 
 MAX_CATEGORY_COUNT = 12
+MAX_CATEGORY_NAME_LENGTH = Category._meta.get_field("name").max_length
 logger = logging.getLogger(__name__)
 
 
@@ -57,6 +58,13 @@ def admin_category_create_view(request):
                 {"message": "카테고리 이름을 입력해주세요."}, status=400
             )
         messages.error(request, "카테고리 이름을 입력해주세요.")
+        return redirect("blog:admin-category-manage")
+
+    if len(name) > MAX_CATEGORY_NAME_LENGTH:
+        message = f"카테고리 이름은 {MAX_CATEGORY_NAME_LENGTH}자 이하여야 합니다."
+        if _is_ajax_request(request):
+            return JsonResponse({"message": message}, status=400)
+        messages.error(request, message)
         return redirect("blog:admin-category-manage")
 
     if Category.objects.filter(name__iexact=name).exists():
