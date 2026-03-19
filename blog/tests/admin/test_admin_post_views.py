@@ -24,7 +24,7 @@ def test_admin_post_create_view_denies_non_staff_user(client, normal_user):
     url = reverse("blog:admin-post-create")
     response = client.get(url)
 
-    assert response.status_code == 302
+    assert response.status_code == 404
 
 
 @pytest.mark.django_db

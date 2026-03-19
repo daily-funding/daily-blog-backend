@@ -1,5 +1,7 @@
+from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
+from urllib.parse import urlencode
 
 
 class AdminAccessMiddleware:
@@ -15,14 +17,11 @@ class AdminAccessMiddleware:
 
         if not request.user.is_authenticated:
             if path != self.admin_login_path:
-                return redirect(
-                    f"{self.admin_login_path}?next={request.get_full_path()}"
-                )
+                query_string = urlencode({"next": request.get_full_path()})
+                return redirect(f"{self.admin_login_path}?{query_string}")
             return self.get_response(request)
 
         if not request.user.is_staff:
-            return redirect(
-                f"{self.admin_login_path}?next={request.get_full_path()}"
-            )
+            raise Http404("페이지를 찾을 수 없습니다.")
 
         return self.get_response(request)
