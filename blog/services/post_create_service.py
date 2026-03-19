@@ -2,9 +2,11 @@ import logging
 import re
 
 from django.conf import settings
+from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
 
 from blog.models import Post, PostImage
+from blog.services.image_upload_service import compress_to_webp
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +68,10 @@ def bind_post_images_to_post(post: Post) -> None:
 # 관리자 게시물 생성 서비스
 @transaction.atomic
 def create_post(*, validated_data, author):
+    preview_image = validated_data.get("preview_image")
+    if isinstance(preview_image, UploadedFile):
+        validated_data["preview_image"] = compress_to_webp(preview_image)
+
     post = Post.objects.create(
         author=author,
         **validated_data,
