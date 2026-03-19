@@ -28,6 +28,7 @@ class InvalidPinOrderError(PinError):
 
 @transaction.atomic
 def add_pin(post):
+    # 빈 Pin 상태에서 전역 직렬화가 보장되지 않는다.  추후 다중 관리자 동시 사용 가능성이 커지면 별도 락 row 또는 DB 제약 강화 방향필요
     pinned_qs = Pin.objects.select_for_update().order_by("sort_order")
 
     if pinned_qs.filter(post=post).exists():
@@ -78,7 +79,6 @@ def reorder_pins(post_ids: list[int]):
     )
 
     pinned_ids = [pin.post_id for pin in pins]
-
     if set(post_ids) != set(pinned_ids):
         raise InvalidPinOrderError()
 
