@@ -1,0 +1,184 @@
+{% extends "blog/admin/base.html" %}
+{% load static %}
+
+{% block title %}게시물 수정{% endblock %}
+
+{% block extra_head %}
+{{ form.media }}
+<link rel="stylesheet" href="{% static 'css/blog_post_content.css' %}">
+<link rel="stylesheet" href="{% static 'css/admin_post_create.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="editor-page">
+  <form method="post" enctype="multipart/form-data" class="editor-form">
+    {% csrf_token %}
+
+    <section class="editor-panel">
+      <div class="editor-top">
+        <button type="button" class="back-btn" onclick="location.href='{% url 'blog:admin-post-detail' post.id %}'">
+          상세로
+        </button>
+      </div>
+
+      <div class="editor-fields">
+        {% if form.non_field_errors %}
+        <div class="form-error-box" role="alert">
+          {% for error in form.non_field_errors %}
+          <p class="field-error">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="field-group">
+          <label for="{{ form.title.id_for_label }}" class="field-label">제목</label>
+          {{ form.title }}
+          {% if form.title.errors %}
+          <p class="field-error">{{ form.title.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="divider-line"></div>
+
+        <div class="field-group">
+          <label for="{{ form.subtitle.id_for_label }}" class="field-label">부제목</label>
+          {{ form.subtitle }}
+          {% if form.subtitle.errors %}
+          <p class="field-error">{{ form.subtitle.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="field-group">
+          <label for="{{ form.description.id_for_label }}" class="field-label">미리보기 설명</label>
+          {{ form.description }}
+          <p class="field-counter" id="description-counter" aria-live="polite">0/150</p>
+          {% if form.description.errors %}
+          <p class="field-error">{{ form.description.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="field-row">
+          <div class="field-block">
+            <label for="{{ form.category.id_for_label }}">카테고리</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+            <p class="field-error">{{ form.category.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="field-block">
+            <label for="{{ form.preview_image.id_for_label }}">썸네일</label>
+
+            {% if post.preview_image %}
+            <div class="current-thumbnail-box">
+              <p class="current-thumbnail-label">현재 썸네일</p>
+              <a href="{{ post.preview_image.url }}" target="_blank" rel="noopener noreferrer"
+                class="current-thumbnail-link">
+                {{ post.preview_image.name }}
+              </a>
+            </div>
+            {% endif %}
+
+            <div class="thumbnail-upload-box">
+              <p class="current-thumbnail-label">변경</p>
+              <input type="file" name="{{ form.preview_image.name }}" id="{{ form.preview_image.id_for_label }}"
+                accept="image/png,image/jpeg,image/webp,image/jpg" aria-label="썸네일 이미지">
+            </div>
+
+            {% if form.preview_image.errors %}
+            <p class="field-error">{{ form.preview_image.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="field-group content-group">
+          {{ form.content }}
+          {% if form.content.errors %}
+          <p class="field-error">{{ form.content.errors.0 }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="editor-bottom">
+        <button type="submit" class="submit-btn">수정 완료</button>
+      </div>
+    </section>
+
+    <section class="preview-panel">
+      <div class="preview-toolbar">
+        <button type="button" class="preview-mode-btn active" data-mode="desktop">데스크탑</button>
+        <button type="button" class="preview-mode-btn" data-mode="mobile">모바일</button>
+      </div>
+
+      <div class="preview-shell preview-desktop" id="preview-shell">
+        <article class="dailyblog_post_preview">
+          <header class="preview-post-header">
+            <div class="preview-hero" id="preview-hero"
+              data-existing-image-url="{% if post.preview_image %}{{ post.preview_image.url }}{% endif %}">
+              <div class="preview-hero-dim"></div>
+
+              <div class="preview-hero-top-icons">
+                <img src="{% static 'images/arrowbtn.png' %}" alt="" aria-hidden="true" class="preview-hero-back">
+                <img src="{% static 'images/closebtn.png' %}" alt="" aria-hidden="true" class="preview-hero-close">
+              </div>
+
+              <div class="post_head_cover">
+                <div class="center_div">
+                  <p class="category_badge" id="preview-category">{{ post.category.name }}</p>
+                  <h1 class="title" id="preview-title">{{ post.title }}</h1>
+                  <p class="subtitle" id="preview-subtitle">{{ post.subtitle }}</p>
+                </div>
+
+                <div class="bottom_div">
+                  <img src="{% static 'images/dailyfundinglogo.png' %}" alt="데일리펀딩" class="preview-dailyfunding-logo">
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <section class="preview-article-body">
+            <div class="preview-body blog-post-content" id="preview-body">
+              {{ post.content|safe }}
+            </div>
+          </section>
+        </article>
+      </div>
+    </section>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static 'js/admin_post_preview.js' %}"></script>
+<script>
+  function getCookie(name) {
+    const cookies = document.cookie ? document.cookie.split(';') : [];
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+        return decodeURIComponent(cookie.substring(name.length + 1));
+      }
+    }
+    return null;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const csrfToken = getCookie("csrftoken");
+
+    if (!window.CKEDITOR) {
+      return;
+    }
+
+    CKEDITOR.on("instanceReady", function (event) {
+      const editor = event.editor;
+
+      editor.on("fileUploadRequest", function (evt) {
+        const xhr = evt.data.fileLoader.xhr;
+        if (csrfToken) {
+          xhr.setRequestHeader("X-CSRFToken", csrfToken);
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
