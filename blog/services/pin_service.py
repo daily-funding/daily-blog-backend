@@ -3,6 +3,8 @@ from django.db.models import F, Max
 
 from blog.models import Pin
 
+MAX_PIN_COUNT = 12
+
 
 class PinError(Exception):
     pass
@@ -25,18 +27,14 @@ class InvalidPinOrderError(PinError):
 
 
 @transaction.atomic
-def add_pin(post, max_count: int):
-    if not 1 <= max_count <= 12:
-        raise ValueError("max_count must be between 1 and 12")
-
-    # Pin 테이블 전체 순서 상태를 건드리므로 관련 row lock
+def add_pin(post):
     pinned_qs = Pin.objects.select_for_update().order_by("sort_order")
 
     if pinned_qs.filter(post=post).exists():
         raise AlreadyPinnedError()
 
     current_count = pinned_qs.count()
-    if current_count >= max_count:
+    if current_count >= MAX_PIN_COUNT:
         raise PinLimitExceededError()
 
     last_sort_order = pinned_qs.aggregate(max_sort=Max("sort_order"))["max_sort"] or 0
@@ -44,7 +42,6 @@ def add_pin(post, max_count: int):
     try:
         Pin.objects.create(post=post, sort_order=last_sort_order + 1)
     except IntegrityError:
-        # 동시성이나 데이터 이상 상황 방어
         raise AlreadyPinnedError()
 
 

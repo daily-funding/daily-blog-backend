@@ -21,6 +21,7 @@ from blog.services.admin_post_list_service import (
     get_admin_post_list_queryset,
 )
 from blog.services.pin_service import (
+    MAX_PIN_COUNT,
     AlreadyPinnedError,
     InvalidPinOrderError,
     NotPinnedError,
@@ -33,7 +34,6 @@ from blog.services.post_create_service import create_post
 from blog.services.post_delete_service import delete_post
 from blog.services.post_content_sanitize_service import sanitize_post_content
 
-MAX_PIN_COUNT = 12
 POSTS_PER_PAGE = 10
 logger = logging.getLogger(__name__)
 
@@ -151,7 +151,7 @@ def admin_pin_add_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
     try:
-        add_pin(post=post, max_count=MAX_PIN_COUNT)
+        add_pin(post=post)
 
     except AlreadyPinnedError:
         if _is_ajax_request(request):
