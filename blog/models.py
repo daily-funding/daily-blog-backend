@@ -24,7 +24,7 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    category = models.ForeignKey(Category, on_delete=SET_NULL)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=50)

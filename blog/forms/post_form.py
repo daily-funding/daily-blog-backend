@@ -1,10 +1,17 @@
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-from blog.models import Post
+from blog.models import Category, Post
 
 
 class PostCreateForm(forms.ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.order_by("created_at"),
+        label="카테고리",
+        widget=forms.Select(),
+        empty_label="카테고리를 선택하세요",
+        error_messages={"required": "카테고리는 비워둘 수 없습니다."},
+    )
     title = forms.CharField(
         label="제목",
         widget=forms.TextInput(attrs={"placeholder": "제목을 입력하세요"}),
