@@ -11,7 +11,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <header class="admin-header">
         <div class="admin-header-inner">
             <a href="{% url 'blog:admin-post-list' %}" class="admin-logo-link">
@@ -33,7 +33,7 @@
         </div>
     </header>
 
-    <main class="admin-main">
+    <main class="admin-main {% block main_class %}{% endblock %}">
         {% if messages %}
         <ul class="message-list" aria-live="polite">
             {% for message in messages %}
