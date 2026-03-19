@@ -10,6 +10,16 @@ from django.utils import timezone
 from blog.models import PostImage
 
 
+@pytest.fixture(autouse=True)
+def aws_mock():
+    with mock_aws():
+        boto3.client("s3", region_name="ap-northeast-2").create_bucket(
+            Bucket="dailyfunding-images",
+            CreateBucketConfiguration={"LocationConstraint": "ap-northeast-2"},
+        )
+        yield
+
+
 @pytest.mark.django_db
 def test_cleanup_orphan_post_images_keeps_db_row_when_storage_delete_fails(
     post_image_factory,

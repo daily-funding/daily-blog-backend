@@ -1,10 +1,21 @@
 # 접근 권한 / redirect / 상세보기
-
+import boto3
 import pytest
 
 from django.urls import reverse
+from moto import mock_aws
 
 from blog.models import Post, PostImage
+
+
+@pytest.fixture(autouse=True)
+def aws_mock():
+    with mock_aws():
+        boto3.client("s3", region_name="ap-northeast-2").create_bucket(
+            Bucket="dailyfunding-images",
+            CreateBucketConfiguration={"LocationConstraint": "ap-northeast-2"},
+        )
+        yield
 
 
 @pytest.mark.django_db

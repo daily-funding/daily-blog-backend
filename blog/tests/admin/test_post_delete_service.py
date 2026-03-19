@@ -8,6 +8,16 @@ from blog.models import PostImage
 from blog.services.post_delete_service import delete_post
 
 
+@pytest.fixture(autouse=True)
+def aws_mock():
+    with mock_aws():
+        boto3.client("s3", region_name="ap-northeast-2").create_bucket(
+            Bucket="dailyfunding-images",
+            CreateBucketConfiguration={"LocationConstraint": "ap-northeast-2"},
+        )
+        yield
+
+
 @pytest.mark.django_db
 def test_delete_post_marks_post_images_for_cleanup(post, post_image_factory):
     post_image = post_image_factory(
