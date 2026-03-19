@@ -196,7 +196,7 @@ a.btn {
     text-decoration: none;
     font-weight: 500;
     display: inline-block;
-    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .post-title-link:hover {
