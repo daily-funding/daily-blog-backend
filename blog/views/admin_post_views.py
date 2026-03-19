@@ -1,6 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseNotAllowed   
+from django.http import HttpResponseNotAllowed
 import logging
 from functools import wraps
 
@@ -44,7 +44,7 @@ def admin_access_required(view_func):
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path(), login_url="admin:login")
 
-        if not request.user.is_staff:
+        if not (request.user.is_active and request.user.is_staff):
             return redirect_to_login(request.get_full_path(), login_url="admin:login")
 
         return view_func(request, *args, **kwargs)
