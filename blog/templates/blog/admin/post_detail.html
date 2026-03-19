@@ -118,7 +118,7 @@
         <section class="preview-article-body post-detail-body">
           <div class="post-detail-meta">
             <div>작성자: {{ post.author }}</div>
-            <div>작성일: {{ post.created_at }}</div>
+            <div>작성일: {{ post.created_at|date:"Y-m-d H:i" }}</div>
           </div>
           <div class="blog-post-content">
             {{ sanitized_content|safe }}
