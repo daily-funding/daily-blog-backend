@@ -32,7 +32,6 @@ staticfiles/
 
 # Node
 node_modules/
-<<<<<<< HEAD
-=======
+
 package-lock.json
->>>>>>> 8187d94 (chore: tailwind 설치)
+
