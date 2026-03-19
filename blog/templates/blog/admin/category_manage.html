@@ -9,7 +9,8 @@
 
     <form method="post" action="{% url 'blog:admin-category-create' %}" class="filter-box" id="category-create-form">
         {% csrf_token %}
-        <input type="text" name="name" placeholder="카테고리 이름 입력" maxlength="20" required>
+        <label for="category-name-input" class="visually-hidden">카테고리 이름</label>
+        <input type="text" name="name" id="category-name-input" placeholder="카테고리 이름 입력" maxlength="20" required>
         <button type="submit" class="btn">추가</button>
         <a href="{% url 'blog:admin-post-list' %}" class="btn btn-outline">목록으로</a>
     </form>
@@ -48,9 +49,9 @@
     </table>
 
     <div id="toast-container" class="toast-container"></div>
-{% endblock %}
+    {% endblock %}
 
-{% block extra_script %}
+    {% block extra_script %}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const createForm = document.getElementById("category-create-form");
@@ -238,4 +239,4 @@
             });
         });
     </script>
-{% endblock %}
+    {% endblock %}
