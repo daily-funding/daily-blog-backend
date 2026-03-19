@@ -1,12 +1,13 @@
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from django.db.models import F, Max
-
+from blog.exceptions import BlogException
 from blog.models import Pin
 
 MAX_PIN_COUNT = 12
 
 
-class PinError(Exception):
+#  추후 blog/exceptions.BlogException을 상속받는 형태로 리팩토링
+class PinError(BlogException):
     pass
 
 
@@ -40,10 +41,7 @@ def add_pin(post):
 
     last_sort_order = pinned_qs.aggregate(max_sort=Max("sort_order"))["max_sort"] or 0
 
-    try:
-        Pin.objects.create(post=post, sort_order=last_sort_order + 1)
-    except IntegrityError:
-        raise AlreadyPinnedError()
+    Pin.objects.create(post=post, sort_order=last_sort_order + 1)
 
 
 @transaction.atomic
