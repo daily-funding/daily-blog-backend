@@ -1,5 +1,4 @@
 # 업로드 API / 파일 검증
-
 import pytest
 
 from django.core.files.uploadedfile import SimpleUploadedFile
