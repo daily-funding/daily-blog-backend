@@ -1,22 +1,9 @@
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  min-height: 100%;
-  color: #303030;
-  font-family: "Noto Sans KR", AppleGothic, Dotum, sans-serif;
-  background: #f3f5f7;
-}
-
-body {
-  word-break: keep-all;
-}
-
 .editor-page {
   min-height: 100vh;
+}
+
+.editor-main {
+  padding: 0 !important;
 }
 
 .editor-form {
@@ -44,9 +31,10 @@ body {
 
 .back-btn,
 .preview-mode-btn,
-.submit-btn {
-  border-radius: 4px;
-  padding: 8px 14px;
+.submit-btn,
+.ghost-btn {
+  border-radius: 8px;
+  padding: 12px 18px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -68,9 +56,8 @@ body {
 
 .submit-btn {
   background: #05309d;
-  border-color: #05309d;
-  border-style: solid;
   color: #ffffff;
+  border: 1px solid #05309d;
 }
 
 .submit-btn:hover {
@@ -78,16 +65,10 @@ body {
   border-color: #041f66;
 }
 
-.submit-btn {
-  background: #05309d;
-  border-color: #05309d;
-  border-style: solid;
-  color: #ffffff;
-}
-
-.submit-btn:hover {
-  background: #041f66;
-  border-color: #041f66;
+.ghost-btn {
+  background: #f1f3f5;
+  color: #333333;
+  border: none;
 }
 
 .editor-fields {
@@ -105,14 +86,7 @@ body {
   gap: 20px;
 }
 
-.field-block label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #4b5563;
-}
-
+.field-block label,
 .field-label {
   display: block;
   margin-bottom: 10px;
@@ -171,7 +145,8 @@ body {
 #id_preview_image:focus,
 .back-btn:focus-visible,
 .preview-mode-btn:focus-visible,
-.submit-btn:focus-visible {
+.submit-btn:focus-visible,
+.ghost-btn:focus-visible {
   outline: 2px solid #05309d;
   outline-offset: 2px;
 }
@@ -221,37 +196,6 @@ body {
   border-top: 1px solid #e5e7eb;
 }
 
-.ghost-btn,
-.submit-btn,
-.preview-mode-btn {
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  padding: 12px 18px;
-  font-size: 14px;
-}
-
-.ghost-btn {
-  background: #f1f3f5;
-  color: #333;
-}
-
-.submit-btn {
-  background: #12b886;
-  color: #fff;
-}
-
-.submit-btn:hover {
-  background: #0ca678;
-}
-
-body {
-  margin: 0;
-  color: #303030;
-  font-family: "Noto Sans KR", AppleGothic, Dotum, sans-serif;
-  word-break: keep-all;
-}
-
 .preview-panel {
   position: sticky;
   top: 0;
@@ -271,20 +215,18 @@ body {
 }
 
 .preview-mode-btn {
-  border: 1px solid #d4d8dc;
   border-radius: 10px;
   padding: 10px 16px;
   background: #f2f4f6;
   color: #303030;
-  font-size: 14px;
-  cursor: pointer;
+  border: 1px solid #d4d8dc;
   font-family: "Spoqa Han Sans", AppleGothic, Dotum, sans-serif;
 }
 
 .preview-mode-btn.active {
-  background: #0081ff;
-  color: white;
-  border-color: #0081ff;
+  background: #05309d;
+  color: #ffffff;
+  border-color: #05309d;
 }
 
 .preview-shell {
@@ -333,9 +275,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: white;
+  color: #ffffff;
   font-size: 38px;
   line-height: 1;
+}
+
+.preview-hero-back,
+.preview-hero-close {
+  width: auto !important;
+  max-width: none !important;
+  height: 39px !important;
+  display: block;
+  flex-shrink: 0;
 }
 
 .post_head_cover {
@@ -388,8 +339,8 @@ body {
 }
 
 .preview-dailyfunding-logo {
-  height: 21px;
   width: auto;
+  height: 21px;
 }
 
 .preview-article-body {
@@ -472,21 +423,14 @@ body {
   }
 
   #id_title {
+    min-height: 112px;
     font-size: 32px;
   }
 
   #id_subtitle,
   #id_description {
-    font-size: 16px;
-  }
-
-  #id_title {
-    min-height: 112px;
-  }
-
-  #id_subtitle,
-  #id_description {
     min-height: 84px;
+    font-size: 16px;
   }
 
   .preview-shell {
@@ -509,7 +453,7 @@ body {
 
   .preview-hero-back,
   .preview-hero-close {
-    height: 29px;
+    height: 29px !important;
   }
 
   .post_head_cover {
@@ -544,33 +488,15 @@ body {
     letter-spacing: -0.66px;
   }
 
-.preview-mobile .post_head_cover .bottom_div {
-  right: 26px;
-  bottom: 23px;
-  font-size: 13px;
-}
+  .preview-mobile .post_head_cover .bottom_div {
+    right: 26px;
+    bottom: 23px;
+    font-size: 13px;
+  }
 
   .preview-article-body {
     max-width: 682px;
     padding: 61px 26px 65px;
-  }
-
-  #id_subtitle,
-  #id_description {
-    min-height: 84px;
-  }
-
-  .preview-shell {
-    border-radius: 20px;
-  }
-
-  .preview-mobile,
-  .preview-desktop {
-    max-width: 100%;
-  }
-
-  .preview-hero {
-    height: 580px;
   }
 
   .preview-mobile .preview-body hr {
