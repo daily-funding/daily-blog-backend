@@ -12,7 +12,7 @@ ALLOWED_IMAGE_CONTENT_TYPES = {
     "image/webp",
 }
 
-MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB
+MAX_IMAGE_SIZE = 20 * 1024 * 1024  # 20MB
 
 
 def validate_uploaded_image(uploaded_file):
@@ -46,14 +46,14 @@ def compress_to_webp(uploaded_file) -> InMemoryUploadedFile:
     if uploaded_file.content_type == "image/gif":
         return uploaded_file
 
-    uploaded_file.seek(0) # 파일 포인터 초기화
-    image = Image.open(uploaded_file) # 이미지 메모리 로드
+    uploaded_file.seek(0)  # 파일 포인터 초기화
+    image = Image.open(uploaded_file)  # 이미지 메모리 로드
 
-    image = ImageOps.exif_transpose(image) # EXIF 회전 보정
+    image = ImageOps.exif_transpose(image)  # EXIF 회전 보정
 
-    output = io.BytesIO() # 메모리 버퍼에 작성
-    image.save(output, format="WEBP", quality=75) # webp/q:75로 압축
-    output.seek(0) # 파일 포인터 초기화
+    output = io.BytesIO()  # 메모리 버퍼에 작성
+    image.save(output, format="WEBP", quality=75)  # webp/q:75로 압축
+    output.seek(0)  # 파일 포인터 초기화
 
     original_name = os.path.splitext(uploaded_file.name)[0]
     new_name = f"{original_name}.webp"
