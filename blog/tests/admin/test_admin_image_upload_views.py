@@ -23,6 +23,7 @@ def test_admin_image_upload_success(client, staff_user, content_image_file):
     assert data["uploaded"] == 1
     assert "url" in data
     assert PostImage.objects.filter(post__isnull=True).count() == 1
+    assert data["fileName"].endswith(".webp")
 
 
 @pytest.mark.django_db
