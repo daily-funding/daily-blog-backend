@@ -7,7 +7,7 @@
   font-family: "Noto Sans KR", AppleGothic, Dotum, sans-serif;
   line-height: 1.75;
   letter-spacing: -0.66px;
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .blog-post-content small {
@@ -99,11 +99,12 @@
   display: table-caption;
   caption-side: bottom;
   padding: 0.6em;
-  color: #4b5563;
-  background: #f7f7f7;
   font-size: 0.75em;
+  color: #333333;
+  background-color: #f7f7f7;
   text-align: center;
   word-break: keep-all;
+  outline-offset: -1px;
 }
 
 .blog-post-content .image-style-align-left {
@@ -124,9 +125,13 @@
 }
 
 .blog-post-content blockquote {
-  padding: 0 1.5em;
+  overflow: hidden;
+  margin: 0 0 1.2em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
   border-left: 5px solid #cccccc;
   font-style: italic;
+  color: #4b5563;
 }
 
 .blog-post-content table {
@@ -198,4 +203,10 @@
   .blog-post-content hr {
     background-size: contain;
   }
+}
+
+.blog-post-content figure,
+.blog-post-content .image {
+  display: table;
+  margin: 1.6em auto;
 }

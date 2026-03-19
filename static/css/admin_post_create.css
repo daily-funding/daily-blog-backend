@@ -370,24 +370,31 @@ body {
   overflow-x: auto;
 }
 
-.ck-editor .ck.ck-toolbar {
-  border-color: #d7dde5 !important;
-  border-top-left-radius: 14px !important;
-  border-top-right-radius: 14px !important;
-  background: #ffffff;
-}
-
-.ck-editor .ck.ck-editor__main > .ck-editor__editable {
-  min-height: 560px;
-  border-color: #d7dde5 !important;
-  border-bottom-left-radius: 14px !important;
-  border-bottom-right-radius: 14px !important;
+.content-group .cke {
+  border: 1px solid #d7dde5 !important;
+  border-radius: 14px !important;
   box-shadow: none !important;
+  overflow: hidden;
 }
 
-.ck-editor .ck.ck-color-grid {
-  max-height: 300px;
-  overflow-y: auto;
+.content-group .cke_top {
+  border-bottom: 1px solid #d7dde5 !important;
+  background: #ffffff !important;
+}
+
+.content-group .cke_contents {
+  border: 0 !important;
+}
+
+.content-group .cke_wysiwyg_frame,
+.content-group .cke_wysiwyg_div,
+.content-group .cke_editable {
+  min-height: 560px !important;
+}
+
+.content-group .cke_bottom {
+  background: #ffffff !important;
+  border-top: 1px solid #e5e7eb !important;
 }
 
 @media (max-width: 1600px) {
