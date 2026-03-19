@@ -6,7 +6,6 @@ from blog.models import Pin
 MAX_PIN_COUNT = 12
 
 
-#  추후 blog/exceptions.BlogException을 상속받는 형태로 리팩토링
 class PinError(BlogException):
     pass
 
