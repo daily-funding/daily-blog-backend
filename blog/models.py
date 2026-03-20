@@ -36,7 +36,8 @@ class Post(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=["-created_at"], name="idx_blog_post_created_at_desc")
+            models.Index(fields=["-created_at"], name="idx_blog_post_created_at_desc"),
+            models.Index(fields=["category", "-created_at"], name="idx_blog_post_category_created_at_desc"),
         ]
 
 
