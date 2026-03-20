@@ -58,6 +58,7 @@ def top_post_list(request):
     pins = (
         Pin.objects.select_related("post")
         .select_related("post__category")
+        .order_by("sort_order")
     )
     pinned_posts = [pin.post for pin in pins]
     serializer = TopPostListSerializer(pinned_posts, many=True)
