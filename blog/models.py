@@ -34,6 +34,11 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["-created_at"], name="idx_blog_post_created_at_desc")
+        ]
+
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=SET_NULL, null=True)
